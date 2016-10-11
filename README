@@ -1,0 +1,37 @@
+
+Tue Oct 11 13:52:15 PDT 2016
+___________________________________________________________________________
+
+    ==============
+    |  CONTENTS  |
+    ==============
+
+
+build_new2.py
+    Script that takes in an SDF file containing all molecules,
+    and generates Tripos mol2 files, GAFF mol2 files, and
+    GAFF .prmtop and .inpcrd files.
+    > Usage: python build_new2.py
+
+ffcompare.py
+    Script to read in mol2 files and run minimization
+    using OpenMM (or oechem.OESzybki).
+    > Example usage: 
+      python ffcompare.py --fftype smirff --ffxml smirff99Frosst.ffxml --inmols /location/to/mol2Files
+
+smirff99Frosst.ffxml
+    FFXML file for SMIRFF
+    Obtained from /home/bannanc/MyScripts/smarty-master/utilities/convert_frosst/smirff99Frosst.ffxml
+    We talked about everyone pointing to a master copy of the .ffxml file though. (tbd)
+
+___________________________________________________________________________
+
+Data sets for comparison:
+ 1. DrugBank                    6696 molecules
+ 2. eMolecules                  8061850 molecules
+ 3. eMolecules, incremental     28974 molecules
+
+Total of 8,097,520 molecules.
+Each data set is broken up in SDF files containing 1000 molecules each.
+    SDFs on GreenPlanet:  /work/cluster/bannanc/off-compareFF
+    Mol2s on GreenPlanet: /work/cluster/kyud/Forcefield_Project
