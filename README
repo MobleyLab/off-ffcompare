@@ -24,6 +24,10 @@ smirff99Frosst.ffxml
     Obtained from /home/bannanc/MyScripts/smarty-master/utilities/convert_frosst/smirff99Frosst.ffxml
     We talked about everyone pointing to a master copy of the .ffxml file though. (tbd)
 
+smi2sdf.py
+    Script to generate a collection SDF file from a list of smiles strings.
+    This can be used to feed into build_new2.py.
+
 ___________________________________________________________________________
 
 Data sets for comparison:

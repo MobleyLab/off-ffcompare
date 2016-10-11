@@ -4,7 +4,8 @@
 ##   molecule, 1 omega conformer is generated. All mols are written into 1 sdf
 ##   file. Individual molecule sdf files can also be written.
 
-## Import and call smi2sdf.smi2sdf(arg1, arg2, arg3, arg4)
+## Edit wdir and smiles in 'Variables' section, then "python file.py"
+## OR, import and call smi2sdf.smi2sdf(wdir, smiles)
 
 import os, sys
 import openeye.oechem as oechem
@@ -16,8 +17,8 @@ import openeye.oeszybki as oeszybki
 ### ------------------- Variables -------------------
 
 
-wdir = "/work/cluster/limvt/qm_AlkEthOH/ffcompare"
-smiles = "AlkEthOH_chain_tiny.smi"
+wdir = "/work/cluster/limvt/qm_AlkEthOH/ffcompare/testAlkEthOH"
+smiles = "AlkEthOH_psi.smi"
 
 ### ------------------- Functions -------------------
 
@@ -47,20 +48,18 @@ def GenerateConfs(Mol):
         return molWithConfs
 
 
-def smi2sdf(arg1, arg2):
+def smi2sdf(wdir, smiles):
     """
     From a file containing smiles strings, generate omega conformers,
        resolve steric clashes, do a quick MM opt, and write SDF output.
 
     Parameters
     ----------
-    arg1: str - working directory containing .smi file
-    arg2: str - name of the smiles file. E.g. "name.smi"
+    wdir: str - working directory containing .smi file
+    smiles: str - name of the smiles file. E.g. "name.smi"
 
     """
-    wdir = arg1
-    smiles = arg2
-    sdfout = arg2.split('.')[0] + '.sdf'
+    sdfout = smiles.split('.')[0] + '.sdf'
     os.chdir(wdir)
     
     ### Read in smiles file.
@@ -88,7 +87,7 @@ def smi2sdf(arg1, arg2):
     ofs.close()
 
 
-def smi2indivSdf(arg1, arg2):
+def smi2indivSdf(wdir, smiles):
     """
     From a file containing smiles strings, generate omega conformers,
        resolve steric clashes, do a quick MM opt, and write SDF output
@@ -96,12 +95,10 @@ def smi2indivSdf(arg1, arg2):
 
     Parameters
     ----------
-    arg1: str - working directory containing .smi file
-    arg2: str - name of the smiles file. E.g. "name.smi"
+    wdir: str - working directory containing .smi file
+    smiles: str - name of the smiles file. E.g. "name.smi"
 
     """
-    wdir = arg1
-    smiles = arg2
     os.chdir(wdir)
     
     ### Read in smiles file.
@@ -116,7 +113,7 @@ def smi2indivSdf(arg1, arg2):
         mol = GenerateConfs(smimol)
 
         ### Open output file to write molecules.
-        sdfout = arg2.split('.')[0] + '-%d.sdf' %(i)
+        sdfout = smiles.split('.')[0] + '-%d.sdf' %(i)
         ofs = oechem.oemolostream()
         if os.path.exists(sdfout):
             #sys.exit("Output .sdf file already exists. Exiting.\n")

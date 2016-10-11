@@ -207,7 +207,7 @@ def minimizeOpenMM(Topology, System, Positions):
 # --------------------------- Main Function ------------------------- #
 
 
-def load_and_minimize(infiles, dommff, dosmirff, ffxml, dogaff, dogaff2, prmFile, inpFile):
+def load_and_minimize(infiles, dommff, dosmirff, ffxml, dogaff, dogaff2, prmDir, inpDir):
 
 
     molfiles = glob.glob(os.path.join(infiles, '*.mol2'))
@@ -284,10 +284,12 @@ def load_and_minimize(infiles, dommff, dosmirff, ffxml, dogaff, dogaff2, prmFile
     
             ### Get relevant files and file names.
             ffield = opt.fftype.upper()
+            prmFile = os.path.join(prmDir, mol.GetTitle()+'.prmtop')
+            inpFile = os.path.join(inpDir, mol.GetTitle()+'.inpcrd')
             parm = parmed.load_file(prmFile, inpFile)
     
             ### Generate topology, system, and position.
-            top, sys, pos = prepGAFFx(pmfFile, inpFile)
+            top, sys, pos = prepGAFFx(parm)
     
             ### Use parmed to write out the mol2 file from optimized coordinates.
             parm.positions = minimizeOpenMM(top, sys, pos)
@@ -322,13 +324,13 @@ if __name__ == '__main__':
             dest = 'ffxml')
 
     parser.add_option('-p', '--prmtop',
-            help = "GAFFx parameter/topology file. Needed when force field type is 'gaff' or 'gaff2'.",
+            help = "GAFFx parameter/topology file directory. Needed when force field type is 'gaff' or 'gaff2'.",
             type = "string",
             default = None,
             dest = 'prmtop')
 
     parser.add_option('-c','--inpcrd',
-            help = "GAFFx coordinate file. Needed when force type is 'gaff' or 'gaff2'.",
+            help = "GAFFx coordinate file directory. Needed when force type is 'gaff' or 'gaff2'.",
             type = "string",
             default = None,
             dest = 'inpcrd')
@@ -351,9 +353,9 @@ if __name__ == '__main__':
     # For GAFFx:  needs *.prmtop and *.inpcrd files
     if opt.fftype == 'gaff' or opt.fftype == 'gaff2':
         if opt.prmtop == None:
-            parser.error("ERROR: No parameter/topology file provided for GAFF or GAFF2 force field.")
+            parser.error("ERROR: No parameter/topology file directory provided for GAFF or GAFF2 force field.")
         if opt.inpcrd == None:
-            parser.error("ERROR: No coordinate file provided for GAFF or GAFF2 force field.")
+            parser.error("ERROR: No coordinate file directory provided for GAFF or GAFF2 force field.")
     
     
     ### Process command line inputs.
