@@ -239,7 +239,7 @@ def load_and_minimize(infiles, dommff, dosmirff, ffxml, dogaff, dogaff2, prmDir,
             fulln = os.path.join(os.getcwd()+'/MMFF94', fname)
             if not optMMFF(mf1mol, 'MMFF94', fulln):
                 print('MMFF94 minimization failed for molecule %s:'\
-                        %  (mfmol.GetTitle()) )
+                        %  (mf1mol.GetTitle()) )
                 continue
     
             ### PART TWO: MMFF94S

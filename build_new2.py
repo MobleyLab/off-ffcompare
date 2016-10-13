@@ -28,7 +28,7 @@ for xmol in ifs.GetOEMols():
     if omega(xmol): 
         mol = xmol
     else:
-        errfile.write("%s\t%s" % (sdf_File, mol.GetTitle()))
+        errfile.write("%s\t%s" % (sdf_File, xmol.GetTitle()))
         continue
 
     molName = mol.GetTitle()
