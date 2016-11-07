@@ -14,7 +14,8 @@ def make_path(filename):
     if not os.path.exists(filename):
         os.makedirs(path)
 
-
+if not os.path.isdir('gaff2_mol2'): os.mkdir('gaff2_mol2')
+    
 def GenTriposGAFF(mol):
     molName = mol.GetTitle()
 
@@ -52,9 +53,16 @@ def GenTriposGAFF(mol):
 
     # generate the gaff mol2 file and the .frcmod file
     _, _ = openmoltools.amber.run_antechamber(molName, tripos_filename,charge_method=None, gaff_mol2_filename=gaff_mol2_filename, frcmod_filename=frcmod_filename)
-
+    
     # generate the gaff .inpcrd and .prmtop files
     openmoltools.amber.run_tleap(molName, gaff_mol2_filename, frcmod_filename, prmtop_filename=prmtop_filename, inpcrd_filename=inpcrd_filename)
+    
+    #generates gaff2 mol2 and frcmod files
+    os.system('antechamber -i %s/%s.mol2 -fi mol2 -o %s/%s.mol2 -fo mol2 -at gaff2' % ('tripos_mol2', molName, 'gaff2_mol2', molName))
+    os.system('parmchk2 -i %s/%s.mol2 -f mol2 -s gaff2 -o %s/%s.frcmod' % ('gaff_mol2', molName, 'gaff2_mol2', molName))
+
+    #generates gaff2 inpcrd and prmtop files
+    openmoltools.amber.run_tleap(molName, 'gaff2_mol2/%s.mol2' % molName, 'gaff2_mol2/%s.frcmod' % molName, prmtop_filename = 'gaff2_mol2/%s.prmtop' % molName, inpcrd_filename = 'gaff2_mol2/%s.inpcrd' % molName, leaprc = 'leaprc.gaff2')
 
     # generate gromacs .top and .gro files
     #openmoltools.utils.convert_via_acpype( molName, prmtop_filename, inpcrd_filename)
