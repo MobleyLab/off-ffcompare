@@ -19,6 +19,10 @@ ffcompare.py
     > Example usage: 
       python ffcompare.py --fftype smirff --ffxml smirff99Frosst.ffxml --inmols /location/to/mol2Files
 
+genTriposGAFFandGAFF2.py
+    Script to generate mol2 files with Tripos, GAFF, and GAFF2 atom types.
+    > Example usage:
+
 smirff99Frosst.ffxml
     FFXML file for SMIRFF
     Obtained from /home/bannanc/MyScripts/smarty-master/utilities/convert_frosst/smirff99Frosst.ffxml
