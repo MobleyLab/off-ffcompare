@@ -27,6 +27,7 @@
 # - Smirff99Frosst
 
 ### To do / Ideas:
+# Update documentation!!
 # Instead of having a different boolean variable for every FF (since right now
 #  the user can only specify one at a time anyway), we could use index args.
 #  I.e., 1=MMFF94*, 2=GAFF, 3=GAFF2, 4=SMIRFF. Pro: less variables, Con: script
