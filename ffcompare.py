@@ -27,7 +27,6 @@
 # - Smirff99Frosst
 
 ### To do / Ideas:
-# CONVERT OPENMM COORDINATES TO ANGSTROMS
 # Have a common function to write out ofs from the updated mol. for ALL ffs.
 # Instead of having a different boolean variable for every FF (since right now
 #  the user can only specify one at a time anyway), we could use index args.
