@@ -27,7 +27,7 @@
 # - Smirff99Frosst
 
 ### To do / Ideas:
-# Have a common function to write out ofs from the updated mol. for ALL ffs.
+# Update documentation!!
 # Instead of having a different boolean variable for every FF (since right now
 #  the user can only specify one at a time anyway), we could use index args.
 #  I.e., 1=MMFF94*, 2=GAFF, 3=GAFF2, 4=SMIRFF. Pro: less variables, Con: script
@@ -348,7 +348,7 @@ def load_and_minimize(infiles, dommff, dosmirff, ffxml, dogaff, dogaff2, gaffdir
             concat_coords = []
             for atomi in parm.positions:
                 concat_coords += [float(i) for i in atomi._value]
-            sfmol.SetCoords(oechem.OEFloatArray(concat_coords))
+            tmpmol.SetCoords(oechem.OEFloatArray(concat_coords))
             writeUpdatedMol(tmpmol, fulln)
 
 
