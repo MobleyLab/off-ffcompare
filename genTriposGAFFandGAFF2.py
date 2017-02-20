@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 
+# Written by: Victoria Lim and Daisy Kyu @ Mobley Lab UCI
+
 # Purpose: Generate Tripos/GAFF/GAFF2 mol2 files for purposes of
 #  comparing minimizations with different force fields. This script
 #  generates input files for all the molecules listed in the single input file.
