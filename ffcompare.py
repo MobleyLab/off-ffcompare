@@ -274,7 +274,7 @@ def load_and_minimize(infiles, dommff, dosmirff, ffxml, dogaff, dogaff2, gaffdir
             fname = mf2mol.GetTitle()+'.mol2'
             fulln = os.path.join(os.getcwd()+'/MMFF94S', fname)
             if os.path.exists(fulln):
-                print('Optimization file %s for MMFF94S does not exists' % (mol.GetTitle()))
+                print('Optimization file %s for MMFF94S already exists' % (mol.GetTitle()))
                 continue
             if not optMMFF(mf2mol, 'MMFF94S', fulln):
                 print('MMFF94S minimization failed for molecule %s:'\
