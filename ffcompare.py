@@ -261,6 +261,9 @@ def load_and_minimize(infiles, dommff, dosmirff, ffxml, dogaff, dogaff2, gaffdir
             print('Starting on MMFF94 optimization for %s' % mf1mol.GetTitle())
             fname = mf1mol.GetTitle()+'.mol2'
             fulln = os.path.join(os.getcwd()+'/MMFF94', fname)
+            if os.path.exists(fulln):
+                print('Optimization file %s for MMFF94 already exists' % (mol.GetTitle()))
+                continue
             if not optMMFF(mf1mol, 'MMFF94', fulln):
                 print('MMFF94 minimization failed for molecule %s:'\
                         %  (mf1mol.GetTitle()) )
@@ -270,6 +273,9 @@ def load_and_minimize(infiles, dommff, dosmirff, ffxml, dogaff, dogaff2, gaffdir
             print('Starting on MMFF94S optimization for %s' % mf2mol.GetTitle())
             fname = mf2mol.GetTitle()+'.mol2'
             fulln = os.path.join(os.getcwd()+'/MMFF94S', fname)
+            if os.path.exists(fulln):
+                print('Optimization file %s for MMFF94S already exists' % (mol.GetTitle()))
+                continue
             if not optMMFF(mf2mol, 'MMFF94S', fulln):
                 print('MMFF94S minimization failed for molecule %s:'\
                         %  (mf2mol.GetTitle()) )
@@ -327,11 +333,11 @@ def load_and_minimize(infiles, dommff, dosmirff, ffxml, dogaff, dogaff2, gaffdir
             if os.path.exists(fulln):
                 print('Optimization file %s already exists' % (mol.GetTitle()))
                 continue
-            if os.path.exists(prmFile) and os.path.exists(inpFile):
+            if not (os.path.exists(prmFile) and os.path.exists(inpFile)):
                 print('%s.inpcrd or %s.prmtop files do not exist' \
  % (mol.GetTitle(), mol.GetTitle()))
                 continue
-            if os.path.getsize(prmFile) and os.path.getsize(inpFile) > 0:
+            if not (os.path.getsize(prmFile) and os.path.getsize(inpFile) > 0):
                 print('%s.inpcrd or %s.prmtop files are empty' \
  % (mol.GetTitle(), mol.GetTitle()))
                 continue
