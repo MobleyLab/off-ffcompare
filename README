@@ -6,12 +6,8 @@ ___________________________________________________________________________
     |  CONTENTS  |
     ==============
 
+NOTE: only Python 2 is supported for the time being.
 
-build_new2.py
-    Script that takes in an SDF file containing all molecules,
-    and generates Tripos mol2 files, GAFF mol2 files, and
-    GAFF .prmtop and .inpcrd files.
-    > Usage: python build_new2.py
 
 ffcompare.py
     Script to read in mol2 files and run minimization
@@ -20,6 +16,7 @@ ffcompare.py
       python ffcompare.py --fftype smirff --ffxml smirff99Frosst.ffxml --inmols /location/to/mol2Files
 
 genTriposGAFFandGAFF2.py
+    TODO: remove anything related to 'commands' module.
     Script to generate mol2 files with Tripos, GAFF, and GAFF2 atom types.
     > Example usage:
 
