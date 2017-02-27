@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+"""
 
 ### Description: This Python script loops over a directory of mol2 files, and
 #      minimizes each with the specified force field (see supported FFs below).
@@ -9,6 +10,10 @@
 #   Minimizations completed using OpenEye (MMFF94*), and OpenMM (GAFF*, SMIRFF).
 #   For N input *.mol2 files, there should be N output *.mol2 files, unless a
 #      molecule file was corrupted or could not otherwise be minimized.
+    For minimizations of different force field types, use the SAME input mol2 files.
+       E.g. both GAFF and MMFF94 minimizations using Tripos mol2 input files.
+       This will retain the same atom types / file format, with only coordinates
+       being updated.
 
 ### Example usage:
 # - python ffcompare.py --fftype smirff --ffxml smirff99Frosst.ffxml --inmols /path/to/mol2s > output.dat
@@ -35,7 +40,7 @@
 #
 # Should we separate MMFF94 and MMFF94S?
 # Should we unseparate GAFF and GAFF2?
-
+"""
 
 import os, sys, glob
 import numpy as np
