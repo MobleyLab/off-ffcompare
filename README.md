@@ -4,25 +4,25 @@
     ==============
     
 Last updated: Feb 27 2017
+
 NOTE: only Python 2 is supported for the time being.
 
 
 ### Contents
 
-ffcompare.py
-    Script to read in mol2 files and run minimization using OpenMM (or oechem.OESzybki).
+* *ffcompare.py*: Script to read in mol2 files and run minimization using OpenMM (or oechem.OESzybki).
 
-genTriposGAFFandGAFF2.py
-    Script to generate mol2 files with Tripos, GAFF, and GAFF2 atom types.
-    TODO: remove anything related to 'commands' module.
+* *genTriposGAFFandGAFF2.py*: Script to generate mol2 files with Tripos, GAFF, and GAFF2 atom types.
 
-smirff99Frosst.ffxml
-    FFXML file for SMIRFF
-    We talked about everyone pointing to a master copy of the .ffxml file though. (tbd)
+TODO: remove anything related to 'commands' module.
 
-smi2sdf.py
-    Script to generate a collection SDF file from a list of SMILES strings.
-    This can be used to feed into genTriposGAFFandGAFF2.py
+* *smirff99Frosst.ffxml*: FFXML file for SMIRFF
+
+We talked about everyone pointing to a master copy of the .ffxml file though. (tbd)
+
+* *smi2sdf.py*: Script to generate a collection SDF file from a list of SMILES strings.
+
+This can be used to feed into genTriposGAFFandGAFF2.py
 
 ___________________________________________________________________________
 
