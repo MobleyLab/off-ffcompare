@@ -34,24 +34,25 @@ The follow is a list of the force fields being considered here:
 
 * *smi2sdf.py*: Script to generate a collection SDF file from a list of SMILES strings for use in genTriposGAFFandGAFF2.py
 
-___________________________________________________________________________
+* *filter_molecule.py* : This script was used to filter the eMolecules and DrugBank databases to meet the requirements for this project.  
+
+___
 
 ### Instructions
 
 1. Generate initial SDF files.
-    a. [Caitlin will include stuff on filtering DrugBank && eMolecules]
-       * example command that Caitlin used
-    b. If starting from a list of SMILES strings, can generate a single conformer with oechem
-       * [VTL will fill this in]
-   
+    1. From large databases use methods in filter_molecule_methods to remove unwanted molecules. Those with > 200 heavy atoms, metals, or in non-chemical valencies. See example scripts used to filter DrugBank and eMolecule data sets in examples/filter_moleces/
+    2. If starting from a list of SMILES strings, can generate a single conformer with oechem
+    * [VTL will fill this in]
+
 2. Generate Tripos, GAFF, and GAFF2 mol2 files.
    * python genTriposGAFFandGAFF2.py -i /path/to/sdf/files -l /path/to/output/files
    
 3. Perform minimization.
-   a. [Daisy fill this in]
-      * python ffcompare.py --fftype smirff --ffxml smirff99Frosst.ffxml --inmols /location/to/mol2Files
-   b. [Nam fill this in with description]
-      * [Nam fill this in with python command]
+   1. [Daisy fill this in]
+   * python ffcompare.py --fftype smirff --ffxml smirff99Frosst.ffxml --inmols /location/to/mol2Files
+   2. [Nam fill this in with description]
+   * [Nam fill this in with python command]
       
 4. Evaluate RMSD.
    * [Nam fill this in with the python command]

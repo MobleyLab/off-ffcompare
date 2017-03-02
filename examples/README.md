@@ -1,6 +1,7 @@
 # Examples
 
-Here are some examples of how to use the scripts provided in this repository
+Here we will show how to use the scripts in this repository 
+on the molecule set AlkEthOH. We create input mol2 files, minize each 
+molecule with all 7 forcefields and then calculated the RMSD of the 
+minimized structures.
 
-* filter\_molecules : shows how these scripts were used to generate sdf files of ~ 1000 molecules for the DrugBank and eMolecules datasets
-* 
