@@ -41,13 +41,15 @@ ___
 ### Instructions
 
 1. Generate initial SDF files.
-    1. From large databases use methods in filter_molecule_methods to remove unwanted molecules. Those with > 200 heavy atoms, metals, or in non-chemical valencies. See example scripts used to filter DrugBank and eMolecule data sets in examples/filter_moleces/
+    1. filter_molecule.py was used to filter DrugBank and eMolecules databases available online. The method `eMolecule_filtering` in that script could be used to filter any other large database of molecules to meet these requirements for all molecules:
+        * < 200 heavy atoms
+        * no metals
+        * proper valency, that is no first row elements with > 5 bonds
     2. If starting from a list of SMILES strings, can generate a single conformer with oechem
     * [VTL will fill this in]
 
 2. Generate Tripos, GAFF, and GAFF2 mol2 files.
-   * python genTriposGAFFandGAFF2.py -i /path/to/sdf/files -l /path/to/output/files
-   
+    * `python genTriposGAFFandGAFF2.py -i /path/to/sdf/files -l /path/to/output/files` 
 3. Perform minimization.
    1. [Daisy fill this in]
    * python ffcompare.py --fftype smirff --ffxml smirff99Frosst.ffxml --inmols /location/to/mol2Files
