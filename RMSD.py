@@ -1,8 +1,14 @@
 #!/usr/bin/env python
+### Author:
 
-import os, sys, glob
+# Daisy Y. Kyu
+# Nam Thi
+# Victoria Lim (limvt@uci.edu)
+# Caitlin C. Bannan (bannanc@uci.edu)
+
+### Description: This Python script 
+import os
 import openeye.oechem as oechem
-import openmoltools
 
 #-------------------- Functions---------------------#
 
