@@ -1,4 +1,9 @@
 #!/usr/bin/env python
+### Author:
+# Daisy Y. Kyu
+# Nam Thi
+# Victoria Lim (limvt@uci.edu)
+# Caitlin C. Bannan (bannanc@uci.edu)
 
 ### Description: This Python script minimize a mol2 files 
 #     with specific forcefield type and location provided.
