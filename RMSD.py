@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-### Author:
+### Authors:
 
 # Daisy Y. Kyu
 # Nam Thi
