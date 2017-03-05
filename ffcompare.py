@@ -68,6 +68,16 @@ from smarty import forcefield_utils as ff_utils
 
 
 def writeUpdatedMol(Mol, fname):
+    """
+    
+    Parameters
+    ----------
+    Mol: an OEChem molecule
+    
+    Returns
+    ----------
+    Output mol2 file
+    """
 
     # Open output file to write molecule.
     ofs = oechem.oemolostream()
@@ -177,7 +187,7 @@ def prepGAFFx(parm):
 
     Parameters
     ----------
-    parm
+    parm 
 
 
     Returns
@@ -208,7 +218,7 @@ def minimizeOpenMM(Topology, System, Positions):
 
     Returns
     -------
-
+    Topology positions
     """
 
     # need to create integrator but don't think it's used
@@ -234,8 +244,16 @@ def minimizeOpenMM(Topology, System, Positions):
 
 
 def load_and_minimize(infiles, dommff, dosmirff, ffxml, dogaff, dogaff2, gaffdir):
-
-
+    """
+    This function loads the molecule and minimizes it 
+    (if it does not already exist) based on the specified fftype.
+    
+    Parameters
+    ----------
+    Mol: OEChem Molecule
+    GAFF and GAFF2: Inpcrd and Prmtop files
+   
+    """
     molfiles = glob.glob(os.path.join(infiles, '*.mol2'))
 
     ### Loop over mols.
