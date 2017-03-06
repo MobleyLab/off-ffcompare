@@ -17,12 +17,12 @@ Here we have created scripts to minimize small molecules using a variety of forc
 The follow is a list of the force fields being considered here:
 
 * [SMIRNOFF99Frosst](https://github.com/open-forcefield-group/smirff99Frosst)
-* GAFF
-* GAFF2
-* MMFF94
-* MMFF94S
-* OPLS3
-* OPLS2005
+* [GAFF](http://ambermd.org/antechamber/gaff.html)
+* [GAFF2](https://mulan.swmed.edu/group/gaff.php)
+* [MMFF94](http://open-babel.readthedocs.io/en/latest/Forcefields/mmff94.html)
+* [MMFF94S](http://open-babel.readthedocs.io/en/latest/Forcefields/mmff94.html)
+* [OPLS3](http://pubs.acs.org/doi/abs/10.1021/acs.jctc.5b00864)
+* [OPLS2005](http://dx.doi.org/10.1002/jcc.20292)
 
 ### Contents
 
