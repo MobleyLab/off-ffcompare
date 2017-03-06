@@ -41,7 +41,7 @@ ___
 ### Instructions
 
 1. Generate initial SDF files.
-    1. filter_molecule.py was used to filter DrugBank and eMolecules databases available online. The method `eMolecule_filtering` in that script could be used to filter any other large database of molecules to meet these requirements for all molecules:
+    1. filter_molecules.py was used to filter DrugBank and eMolecules databases available online. The method `eMolecule_filtering` in that script could be used to filter any other large database of molecules to meet these requirements for all molecules:
         * < 200 heavy atoms
         * no metals
         * proper valency, that is no first row elements with > 5 bonds
