@@ -8,9 +8,9 @@ This project relates to the larger goals of the
 [Open Force Field Group's](https://github.com/open-forcefield-group)
 effort to automate force field parameterization. 
 
-Here we have created scripts to minize small molecules using a variety of force fields with two goals in mind. 
+Here we have created scripts to minimize small molecules using a variety of force fields with two goals in mind. 
 1. Find places where the SMIRNOFF99Frosst force field behaves differently from currently accepted force fields.
-2. Discover molecules that are minized to different conformations by different force fields. These molecules will likely be used in future SMIRNOFF parameterizations. 
+2. Discover molecules that are minimized to different conformations by different force fields. These molecules will likely be used in future SMIRNOFF parameterizations. 
 
 ### Force fields 
 
@@ -34,7 +34,7 @@ The follow is a list of the force fields being considered here:
 
 * *smi2sdf.py*: Script to generate a collection SDF file from a list of SMILES strings for use in genTriposGAFFandGAFF2.py
 
-* *filter_molecule.py* : This script was used to filter the eMolecules and DrugBank databases to meet the requirements for this project.  
+* *filter_molecules.py* : This script was used to filter the eMolecules and DrugBank databases to meet the requirements for this project.  
 
 ___
 
@@ -45,6 +45,7 @@ ___
         * < 200 heavy atoms
         * no metals
         * proper valency, that is no first row elements with > 5 bonds
+        * `python filter_molecules.py` assuming DrugBank.sdf, eMolecules.sdf.gz and eMolecules_incremental.sdf.gz are in the current directory. 
     2. If starting from a list of SMILES strings, can generate a single conformer with oechem
     * [VTL will fill this in]
 
