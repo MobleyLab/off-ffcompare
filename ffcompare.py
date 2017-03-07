@@ -2,6 +2,8 @@
 
 """
 
+Written by
+
 ### Description: This Python script loops over a directory of mol2 files, and
 #      minimizes each with the specified force field (see supported FFs below).
 #      In the directory where this script is called, a subdirectory is created
@@ -76,7 +78,7 @@ def writeUpdatedMol(Mol, fname):
     
     Returns
     ----------
-    Output mol2 file
+    fname: str - name of the output mol2 file
     """
 
     # Open output file to write molecule.
@@ -187,8 +189,7 @@ def prepGAFFx(parm):
 
     Parameters
     ----------
-    parm 
-
+    parm: Prmtop and Inpcrd files 
 
     Returns
     -------
@@ -218,7 +219,8 @@ def minimizeOpenMM(Topology, System, Positions):
 
     Returns
     -------
-    Topology positions
+    Topology: OpenMM topology positions for minimized mol
+    
     """
 
     # need to create integrator but don't think it's used
@@ -250,9 +252,13 @@ def load_and_minimize(infiles, dommff, dosmirff, ffxml, dogaff, dogaff2, gaffdir
     
     Parameters
     ----------
-    Mol: OEChem Molecule
-    GAFF and GAFF2: Inpcrd and Prmtop files
-   
+    infiles: Path to directory containing all mol2 files 
+    dommff: Minimizes using MMFF94 or MMFF94S 
+    dosmirff: Minimizes using SMIRFF
+    ffxml: Path and string name of *.ffxml file
+    dogaff: Minimizes using GAFF
+    dogaff2: Minimizes using GAFF2
+    gaffdir: Path to directory containing Inpcrd and Prmtop files
     """
     molfiles = glob.glob(os.path.join(infiles, '*.mol2'))
 
