@@ -21,7 +21,6 @@ def make_path(filename):
     Parameters
     ----------
     filename: String name of directory
-    
     """
     path = os.path.split(filename)[0]
     if not os.path.exists(filename):
