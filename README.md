@@ -53,10 +53,10 @@ ___
     * `python genTriposGAFFandGAFF2.py -i /path/to/sdf/files -l /path/to/output/files` 
 3. Perform minimization.
    1. ffcompare.py was used to minimize mol2 files with a specified forcefield type (fftype). Supported fftypes include GAFF, GAFF2, MMFF94, MMFF94S and SMIRFF. Inmols should specify path to tripos mol2.
-   * SMIRFF: python ffcompare.py --fftype smirff --ffxml smirff99Frosst.ffxml --inmols /location/to/triposmol2Files
-   * GAFF: python ffcompare.py --fftyle gaff --inmols /location/to/triposmol2Files -g /location/to/gaff_inpcrd_prmtopFiles
-   * GAFF2: python ffcompare.py --fftype gaff2 --inmols /location/to/triposmol2Files -g /location/to/gaff2_inpcrd_prmtopFiles
-   * MMFF94 & MMFF94S: python ffcompare.py --fftype mmff --inmols /location/to/triposmol2Files
+   * SMIRFF: `python ffcompare.py --fftype smirff --ffxml smirff99Frosst.ffxml --inmols /location/to/triposmol2Files`
+   * GAFF: `python ffcompare.py --fftyle gaff --inmols /location/to/triposmol2Files -g /location/to/gaff_inpcrd_prmtopFiles`
+   * GAFF2: `python ffcompare.py --fftype gaff2 --inmols /location/to/triposmol2Files -g /location/to/gaff2_inpcrd_prmtopFiles`
+   * MMFF94 & MMFF94S: `python ffcompare.py --fftype mmff --inmols /location/to/triposmol2Files`
    2. [Nam fill this in with description]
    * [Nam fill this in with python command]
       
