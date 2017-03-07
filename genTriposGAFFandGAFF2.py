@@ -24,14 +24,13 @@ def make_path(filename):
 
 def GenTriposGAFF(mol):
     """
-    This function takes a molecule from a given SDF file
-    and charges it to make a tripos mol2. Tripos mol2 are
-    used to generate GAFF and GAFF2 mol2, inpcrd and prmtop 
-    files.
+    This function reads in an OEChem molecule, charges it using the AM1-BCC scheme,
+    and generates a Tripos mol2 file. The Tripos mol2 file is used to create GAFF 
+    and GAFF2 *.mol2 files, topology files (*.prmtop), and coordinate files (*.inpcrd).
     
     Parameters
     ----------
-    OEChem Molecule
+    mol: OEChem molecule
     
     Returns
     ----------
