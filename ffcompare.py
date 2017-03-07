@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
 """
-
 Written by Victoria Lim and Daisy Kyu @ Mobley Lab UCI
 
 ### Description: This Python script loops over a directory of mol2 files, and
@@ -79,6 +78,7 @@ def writeUpdatedMol(Mol, fname):
     Returns
     ----------
     fname: str - name of the output mol2 file
+    
     """
 
     # Open output file to write molecule.
@@ -156,13 +156,13 @@ def optMMFF(Mol, FF, fname):
 
 def prepSMIRFF(Mol, FF_file):
     """
+    
     Creates OpenMM Topology, System, and initial positions of given molecule.
 
     Parameters
     ----------
     Mol: an OEChem molecule
     FF_file: string name of *.ffxml file with path
-
 
     Returns
     -------
@@ -183,6 +183,7 @@ def prepSMIRFF(Mol, FF_file):
 
 def prepGAFFx(parm):
     """
+    
     Creates topology, system, and coordinates for AMBER
        Prmtop and Inpcrd input files. This function should work
        with either GAFF or GAFF2 files.
@@ -208,6 +209,7 @@ def prepGAFFx(parm):
 
 def minimizeOpenMM(Topology, System, Positions):
     """
+    
     Minimize molecule with specified topology, system, and positions
        using OpenMM. Return the positions of the optimized moelcule.
 
@@ -247,6 +249,7 @@ def minimizeOpenMM(Topology, System, Positions):
 
 def load_and_minimize(infiles, dommff, dosmirff, ffxml, dogaff, dogaff2, gaffdir):
     """
+    
     This function loads the molecule and minimizes it 
     (if it does not already exist) based on the specified fftype.
     
@@ -259,6 +262,7 @@ def load_and_minimize(infiles, dommff, dosmirff, ffxml, dogaff, dogaff2, gaffdir
     dogaff: Minimizes using GAFF
     dogaff2: Minimizes using GAFF2
     gaffdir: Path to directory containing Inpcrd and Prmtop files
+    
     """
     molfiles = glob.glob(os.path.join(infiles, '*.mol2'))
 
