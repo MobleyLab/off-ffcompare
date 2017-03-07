@@ -17,6 +17,11 @@ import openeye.oechem as oechem
 def make_path(filename):
     """
     This function makes subdirectories.
+    
+    Parameters
+    ----------
+    filename: String name of directory
+    
     """
     path = os.path.split(filename)[0]
     if not os.path.exists(filename):
