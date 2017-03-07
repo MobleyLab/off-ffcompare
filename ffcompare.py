@@ -2,7 +2,7 @@
 
 """
 
-Written by
+Written by Victoria Lim and Daisy Kyu @ Mobley Lab UCI
 
 ### Description: This Python script loops over a directory of mol2 files, and
 #      minimizes each with the specified force field (see supported FFs below).
