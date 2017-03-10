@@ -46,15 +46,17 @@ def OPLSMin(ifile,opttype):
 
     if opttype == 'OPLS3':  #specify which fftype to be run
 
-        cmd = '$SCHRODINGER/utilities/ffld_server  -version 16 -charges_from_ct -virt -no_cm1a_bcc -opt -BFGS \
-               -imol2 /input_location/%s -omol2 /output_location/%s' % (ifile,ifile.split('/')[-1])
+        cmd = '$SCHRODINGER/utilities/ffld_server  -version 16 -charges_from_ct -virt \
+               -no_cm1a_bcc -opt -BFGS -imol2 /input_location/%s \ 
+               -omol2 /output_location/%s'% (ifile,ifile.split('/')[-1])
 
         os.system(cmd)      #execute the command from the shell
 
     if opttype == 'OPLS2005':
 
-        cmd = '$SCHRODINGER/utilities/ffld_server -version 14 -charges_from_ct -virt -no_cm1a_bcc -opt -BFGS \
-               -imol2 /input_location/%s -omol2 /output_location/%s' % (ifile,ifile.split('/')[-1])
+        cmd = '$SCHRODINGER/utilities/ffld_server -version 14 -charges_from_ct -virt \
+               -no_cm1a_bcc -opt -BFGS -imol2 /input_location/%s \ 
+               -omol2 /output_location/%s' % (ifile,ifile.split('/')[-1])
 
         os.system(cmd)
 
