@@ -57,8 +57,9 @@ ___
    * GAFF: `python ffcompare.py --fftyle gaff --inmols /location/to/triposmol2Files -g /location/to/gaff_inpcrd_prmtopFiles`
    * GAFF2: `python ffcompare.py --fftype gaff2 --inmols /location/to/triposmol2Files -g /location/to/gaff2_inpcrd_prmtopFiles`
    * MMFF94 & MMFF94S: `python ffcompare.py --fftype mmff --inmols /location/to/triposmol2Files`
-   2. [Nam fill this in with description]
-   * [Nam fill this in with python command]
+   2. OPLS.py was used to minimize mol2 files with a specific forcefield type (fftype). Supported fftypes inclue OPLS3, OPLS2005. Input should specifiy path to tripos mol2 files and optimizetype should specify the forcefield type.
+   * OPLS3: 'python OPLS.py --input /location/to/triposmol2Files --optimizetype "OPLS3" '
+   * OPLS2005: 'python OPLS.py --input /location/to/triposmol2Files --optimizetype "OPLS2005" '
       
 4. Evaluate RMSD.
    * [Nam fill this in with the python command]
