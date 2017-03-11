@@ -41,7 +41,7 @@ ___
 ### Instructions
 
 1. Generate initial SDF files.
-    1. filter_molecules.py was used to filter DrugBank and eMolecules databases available online. The method `eMolecule_filtering` in that script could be used to filter any other large database of molecules to meet these requirements for all molecules:
+    1. Use filter_molecules.py to filter DrugBank and eMolecules databases available online. The method `eMolecule_filtering` in that script could be used to filter any other large database of molecules to meet these requirements for all molecules:
         * < 200 heavy atoms
         * no metals
         * proper valency, that is no first row elements with > 5 bonds
@@ -52,10 +52,14 @@ ___
 2. Generate Tripos, GAFF, and GAFF2 mol2 files.
     * `python genTriposGAFFandGAFF2.py -i /path/to/sdf/files -l /path/to/output/files` 
 3. Perform minimization.
-   1. [Daisy fill this in]
-   * python ffcompare.py --fftype smirff --ffxml smirff99Frosst.ffxml --inmols /location/to/mol2Files
-   2. [Nam fill this in with description]
-   * [Nam fill this in with python command]
+   1. Use ffcompare.py to minimize mol2 files with a specified forcefield type (fftype). Supported fftypes include GAFF, GAFF2, MMFF94, MMFF94S and SMIRFF. The inmols flag should specify path to tripos \*.mol2 files (not the mol2 files themselves).
+   * SMIRFF: `python ffcompare.py --fftype smirff --ffxml smirff99Frosst.ffxml --inmols /location/to/triposmol2Files`
+   * GAFF: `python ffcompare.py --fftyle gaff --inmols /location/to/triposmol2Files -g /location/to/gaff_inpcrd_prmtopFiles`
+   * GAFF2: `python ffcompare.py --fftype gaff2 --inmols /location/to/triposmol2Files -g /location/to/gaff2_inpcrd_prmtopFiles`
+   * MMFF94 & MMFF94S: `python ffcompare.py --fftype mmff --inmols /location/to/triposmol2Files`
+   2. OPLS.py was used to minimize mol2 files with a specific forcefield type (fftype). Supported fftypes inclue OPLS3, OPLS2005. Input should specifiy path to tripos mol2 files and optimizetype should specify the forcefield type.
+   * OPLS3: 'python OPLS.py --input /location/to/triposmol2Files --optimizetype "OPLS3" '
+   * OPLS2005: 'python OPLS.py --input /location/to/triposmol2Files --optimizetype "OPLS2005" '
       
 4. Evaluate RMSD.
    * [Nam fill this in with the python command]

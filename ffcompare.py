@@ -2,6 +2,8 @@
 
 """
 
+Written by Victoria Lim and Daisy Kyu @ Mobley Lab UCI
+
 ### Description: This Python script loops over a directory of mol2 files, and
 #      minimizes each with the specified force field (see supported FFs below).
 #      In the directory where this script is called, a subdirectory is created
@@ -68,6 +70,18 @@ from smarty import forcefield_utils as ff_utils
 
 
 def writeUpdatedMol(Mol, fname):
+    """
+    
+    Parameters
+    ----------
+    Mol: an OEChem molecule
+    fname: str - name of the output mol2 file
+    
+    Returns
+    -------
+    True if the function completed successfully
+    
+    """
 
     # Open output file to write molecule.
     ofs = oechem.oemolostream()
@@ -144,13 +158,13 @@ def optMMFF(Mol, FF, fname):
 
 def prepSMIRFF(Mol, FF_file):
     """
+    
     Creates OpenMM Topology, System, and initial positions of given molecule.
 
     Parameters
     ----------
     Mol: an OEChem molecule
     FF_file: string name of *.ffxml file with path
-
 
     Returns
     -------
@@ -171,14 +185,14 @@ def prepSMIRFF(Mol, FF_file):
 
 def prepGAFFx(parm):
     """
+    
     Creates topology, system, and coordinates for AMBER
        Prmtop and Inpcrd input files. This function should work
        with either GAFF or GAFF2 files.
 
     Parameters
     ----------
-    parm
-
+    parm: parmed.structure.Structure instance from an OpenMM Topology
 
     Returns
     -------
@@ -197,18 +211,20 @@ def prepGAFFx(parm):
 
 def minimizeOpenMM(Topology, System, Positions):
     """
+    
     Minimize molecule with specified topology, system, and positions
        using OpenMM. Return the positions of the optimized moelcule.
 
     Parameters
     ----------
-    Topology
-    System
-    Positions
+    Topology:  OpenMM topology for this mol's Prmtop and Inpcrd files
+    System:    OpenMM system for this mol's Prmtop and Inpcrd files
+    Positions: OpenMM positions for this mol's Prmtop and Inpcrd files
 
     Returns
     -------
-
+    Topology.positions: OpenMM topology positions for minimized mol
+    
     """
 
     # need to create integrator but don't think it's used
@@ -234,8 +250,22 @@ def minimizeOpenMM(Topology, System, Positions):
 
 
 def load_and_minimize(infiles, dommff, dosmirff, ffxml, dogaff, dogaff2, gaffdir):
-
-
+    """
+    
+    This function loads the molecule and minimizes it 
+    (if it does not already exist) based on the specified fftype.
+    
+    Parameters
+    ----------
+    infiles: Path to directory containing all mol2 files 
+    dommff: Boolean - True to minimize with MMFF94 or MMFF94S 
+    dosmirff: Boolean - True to minimize with SMIRFF
+    ffxml: String - path and name of *.ffxml file
+    dogaff: Boolean - True to minimize with GAFF
+    dogaff2: Boolean - True to minimize with GAFF2
+    gaffdir: String - path to directory containing Inpcrd and Prmtop files
+    
+    """
     molfiles = glob.glob(os.path.join(infiles, '*.mol2'))
 
     ### Loop over mols.
