@@ -75,10 +75,11 @@ def writeUpdatedMol(Mol, fname):
     Parameters
     ----------
     Mol: an OEChem molecule
+    fname: str - name of the output mol2 file
     
     Returns
-    ----------
-    fname: str - name of the output mol2 file
+    -------
+    True if the function completed successfully
     
     """
 
@@ -191,7 +192,7 @@ def prepGAFFx(parm):
 
     Parameters
     ----------
-    parm: Prmtop and Inpcrd files 
+    parm: parmed.structure.Structure instance from an OpenMM Topology
 
     Returns
     -------
@@ -216,13 +217,13 @@ def minimizeOpenMM(Topology, System, Positions):
 
     Parameters
     ----------
-    Topology
-    System
-    Positions
+    Topology:  OpenMM topology for this mol's Prmtop and Inpcrd files
+    System:    OpenMM system for this mol's Prmtop and Inpcrd files
+    Positions: OpenMM positions for this mol's Prmtop and Inpcrd files
 
     Returns
     -------
-    Topology: OpenMM topology positions for minimized mol
+    Topology.positions: OpenMM topology positions for minimized mol
     
     """
 
@@ -257,12 +258,12 @@ def load_and_minimize(infiles, dommff, dosmirff, ffxml, dogaff, dogaff2, gaffdir
     Parameters
     ----------
     infiles: Path to directory containing all mol2 files 
-    dommff: Minimizes using MMFF94 or MMFF94S 
-    dosmirff: Minimizes using SMIRFF
-    ffxml: Path and string name of *.ffxml file
-    dogaff: Minimizes using GAFF
-    dogaff2: Minimizes using GAFF2
-    gaffdir: Path to directory containing Inpcrd and Prmtop files
+    dommff: Boolean - True to minimize with MMFF94 or MMFF94S 
+    dosmirff: Boolean - True to minimize with SMIRFF
+    ffxml: String - path and name of *.ffxml file
+    dogaff: Boolean - True to minimize with GAFF
+    dogaff2: Boolean - True to minimize with GAFF2
+    gaffdir: String - path to directory containing Inpcrd and Prmtop files
     
     """
     molfiles = glob.glob(os.path.join(infiles, '*.mol2'))
