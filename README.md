@@ -14,7 +14,7 @@ Here we have created scripts to minimize small molecules using a variety of forc
 
 ### Force fields 
 
-The follow is a list of the force fields being considered here:
+The following is a list of the force fields being considered here:
 
 * [SMIRNOFF99Frosst](https://github.com/open-forcefield-group/smirff99Frosst)
 * [GAFF](http://ambermd.org/antechamber/gaff.html)
@@ -46,8 +46,8 @@ ___
         * no metals
         * proper valency, that is no first row elements with > 5 bonds
         * `python filter_molecules.py` assuming DrugBank.sdf, eMolecules.sdf.gz and eMolecules_incremental.sdf.gz are in the current directory. 
-    2. If starting from a list of SMILES strings, can generate a single conformer with oechem
-    * [VTL will fill this in]
+    2. If starting from a list of SMILES strings, can generate a single conformer with oechem using smi2sdf.py
+        * Change variables, then call `python smi2.sdf.py`.
 
 2. Generate Tripos, GAFF, and GAFF2 mol2 files.
     * `python genTriposGAFFandGAFF2.py -i /path/to/sdf/files -l /path/to/output/files` 
