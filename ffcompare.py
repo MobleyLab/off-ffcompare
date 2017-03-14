@@ -117,14 +117,10 @@ def optMMFF(Mol, FF, fname):
     """
 
     tmpmol = oechem.OEMol( Mol)  # work on a copy of the molecule
-
-    # Open output file to write molecule.
-    ofs = oechem.oemolostream()
+    
     if os.path.exists(fname):
         print("Output .mol2 file already exists. Skipping.\n")
         return
-    if not ofs.open(fname):
-        oechem.OEThrow.Fatal("Unable to open %s for writing" % fname)
 
     # set general energy options along with the run type specification
     optSzybki = oeszybki.OESzybkiOptions()
@@ -146,7 +142,10 @@ def optMMFF(Mol, FF, fname):
     if not szOpt(tmpmol, szResults):
         print( 'optMMFF failed for %s' %  tmpmol.GetTitle() )
         return False
-
+    # Open output file to write molecule.
+    ofs = oechem.oemolostream()
+    if not ofs.open(fname):
+        oechem.OEThrow.Fatal("Unable to open %s for writing" % fname)
     # write out mol2 file and close the output filestream.
     oechem.OEWriteConstMolecule(ofs, tmpmol)
     ofs.close()
