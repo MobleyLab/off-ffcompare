@@ -31,10 +31,9 @@ Written by Victoria Lim and Daisy Kyu @ Mobley Lab UCI
 # - MMFF94 and MMFF94S (calling 'mmff' will return both)
 # - GAFF
 # - GAFF2
-# - Smirff99Frosst
+# - SMIRNOFF formated force fields
 
 ### To do / Ideas:
-# Update documentation!!
 # Instead of having a different boolean variable for every FF (since right now
 #  the user can only specify one at a time anyway), we could use index args.
 #  I.e., 1=MMFF94*, 2=GAFF, 3=GAFF2, 4=SMIRFF. Pro: less variables, Con: script
@@ -71,23 +70,23 @@ from smarty import forcefield_utils as ff_utils
 
 def writeUpdatedMol(Mol, fname):
     """
-    
+
     Parameters
     ----------
     Mol: an OEChem molecule
     fname: str - name of the output mol2 file
-    
+
     Returns
     -------
     True if the function completed successfully
-    
+
     """
 
     # Open output file to write molecule.
     ofs = oechem.oemolostream()
     if os.path.exists(fname):
         print("Output .mol2 file already exists. Skipping.\n")
-        return
+        return False
     if not ofs.open(fname):
         oechem.OEThrow.Fatal("Unable to open %s for writing" % fname)
 
@@ -117,10 +116,10 @@ def optMMFF(Mol, FF, fname):
     """
 
     tmpmol = oechem.OEMol( Mol)  # work on a copy of the molecule
-    
+
     if os.path.exists(fname):
         print("Output .mol2 file already exists. Skipping.\n")
-        return
+        return False
 
     # set general energy options along with the run type specification
     optSzybki = oeszybki.OESzybkiOptions()
@@ -142,36 +141,33 @@ def optMMFF(Mol, FF, fname):
     if not szOpt(tmpmol, szResults):
         print( 'optMMFF failed for %s' %  tmpmol.GetTitle() )
         return False
-    # Open output file to write molecule.
-    ofs = oechem.oemolostream()
-    if not ofs.open(fname):
-        oechem.OEThrow.Fatal("Unable to open %s for writing" % fname)
-    # write out mol2 file and close the output filestream.
-    oechem.OEWriteConstMolecule(ofs, tmpmol)
-    ofs.close()
 
-    return True
+    # try writing output file and return result
+    return writeUpdatedMol(tmpmol, fname):
 
 
 
 
-def prepSMIRFF(Mol, FF_file):
+
+def optSMIRFF(input_Mol, FF_file, output_mol2):
     """
-    
+
     Creates OpenMM Topology, System, and initial positions of given molecule.
 
     Parameters
     ----------
     Mol: an OEChem molecule
     FF_file: string name of *.ffxml file with path
+    output_mol2: string path/filename.mol2 to save output structure
 
     Returns
     -------
-    Topology:  OpenMM topology for this Mol
-    System:    OpenMM system for this Mol
-    Positions: OpenMM positions for this Mol
+    Boolean: True if output is successfully created
 
     """
+    # make copy of the input_Mol
+    Mol = oechem.OEMol(input_Mol)
+
     # check that the *.ffxml file exists
     if not os.path.exists(FF_file):
         print("Cannot find the .ffxml file for prepSMIRFF!")
@@ -179,38 +175,77 @@ def prepSMIRFF(Mol, FF_file):
 
     ff = forcefield.ForceField(FF_file)
     Topology, System, Positions = ff_utils.create_system_from_molecule(ff, Mol, verbose = False)
-    return Topology, System, Positions
+
+    parm = topsystem.load_topology(Topology, system=System, xyz=Position)
+
+    ### minimize with OpenMM and return the final coordinates in the OEform
+    coords  = minimizeOpenMM(top, syst, pos)
+
+    Mol.SetCoords(oechem.OEFloatArray(concat_coords))
+    return writeUpdatedMol(Mol, output_file)
 
 
-def prepGAFFx(parm):
+def optGAFFx(mol, gaffdir, output_mol2):
     """
-    
-    Creates topology, system, and coordinates for AMBER
-       Prmtop and Inpcrd input files. This function should work
-       with either GAFF or GAFF2 files.
+    Uses OEMol and GAFF input files to minimize the system and write
+    output mol2
 
     Parameters
     ----------
-    parm: parmed.structure.Structure instance from an OpenMM Topology
+    mol: OEMol
+    gaffdir: directory with GAFF input files
+    output_mol2: string, path/to/mol2 where output structure should be saved
 
     Returns
     -------
-    Topology:  OpenMM topology for this mol's Prmtop and Inpcrd files
-    System:    OpenMM system for this mol's Prmtop and Inpcrd files
-    Positions: OpenMM positions for this mol's Prmtop and Inpcrd files
+    boolean: True minimization succeeded, False otherwise
 
     """
+    ### Check: optimized file not existing, gaff dependencies present, gaff files have content
+    if os.path.exists(output_mol2):
+        print('Optimization file %s already exists' % (output_mol2))
+        return False
 
+    ### Locate GAFF input files
+    prmFile = os.path.join(gaffdir,mol.GetTitle()+'.prmtop')
+    inpFile = os.path.join(gaffdir,mol.GetTitle()+'.inpcrd')
+
+    # Check prmtop file
+    if not os.path.exists(prmFile):
+        print("%s does not exist, skipping minimization" % prmFile)
+        return False
+    elif not os.path.getsize(prmFile) > 0:
+        print("%s is empty, skipping minimization" % prmFile)
+        return False
+
+    # Check inpcrd file
+    if not os.path.exists(inpFile):
+        print("%s does not exist, skipping minimization" % inpFile)
+        return False
+    elif not os.path.getsize(inpFile):
+        print("%s is empty, skipping minimization" % inpFile)
+        return False
+
+    # make copy of mol2 file
+    tmpmol = oechem.OEMol(mol)
+
+    # load input files and create parmed system
+    parm = parmed.load_file(prmFile, inpFile)
     Topology = parm.topology
     Positions = parm.positions
     System = parm.createSystem(nonbondedMethod=app.NoCutoff)
 
-    return Topology, System, Positions
+    ### Use parmed to write out mol2 file from optimized coordinates.
+    coords = minimizeOpenMM(top, syst, pos)
+
+    tmpmol.SetCoords(oechem.OEFloatArray(coords))
+    return writeUpdatedMol(tmpmol, output_mol2)
+
 
 
 def minimizeOpenMM(Topology, System, Positions):
     """
-    
+
     Minimize molecule with specified topology, system, and positions
        using OpenMM. Return the positions of the optimized moelcule.
 
@@ -223,7 +258,7 @@ def minimizeOpenMM(Topology, System, Positions):
     Returns
     -------
     Topology.positions: OpenMM topology positions for minimized mol
-    
+
     """
 
     # need to create integrator but don't think it's used
@@ -239,8 +274,12 @@ def minimizeOpenMM(Topology, System, Positions):
 
     Topology.positions = simulation.context.getState(getPositions=True).getPositions(asNumpy=True)
 
+    ### Format OpenMM positions to a form readable to oemol
+    concat_coords = []
+    for atomi in Topology.positions:
+        concat_coords += [float(i) for i in atomi._value]
 
-    return Topology.positions
+    return concat_coords
 
 
 
@@ -250,20 +289,20 @@ def minimizeOpenMM(Topology, System, Positions):
 
 def load_and_minimize(infiles, dommff, dosmirff, ffxml, dogaff, dogaff2, gaffdir):
     """
-    
-    This function loads the molecule and minimizes it 
+
+    This function loads the molecule and minimizes it
     (if it does not already exist) based on the specified fftype.
-    
+
     Parameters
     ----------
-    infiles: Path to directory containing all mol2 files 
-    dommff: Boolean - True to minimize with MMFF94 or MMFF94S 
+    infiles: Path to directory containing all mol2 files
+    dommff: Boolean - True to minimize with MMFF94 or MMFF94S
     dosmirff: Boolean - True to minimize with SMIRFF
     ffxml: String - path and name of *.ffxml file
     dogaff: Boolean - True to minimize with GAFF
     dogaff2: Boolean - True to minimize with GAFF2
     gaffdir: String - path to directory containing Inpcrd and Prmtop files
-    
+
     """
     molfiles = glob.glob(os.path.join(infiles, '*.mol2'))
 
@@ -276,14 +315,15 @@ def load_and_minimize(infiles, dommff, dosmirff, ffxml, dogaff, dogaff2, gaffdir
              oechem.OEThrow.Warning("Unable to open %s for reading" % f)
         try:
             mol = next(ifs.GetOEMols())
-        except StopIteration:
+        except StopIteration: # No molecule in this mol2, move on
             print('No mol loaded for %s (StopIteration exception)' % mol.GetTitle())
+            continue
         ifs.close()
 
-        if dommff:  # Optimize with MMFF94 and MMFF94S. Produce output mol2 files for each.
+        # Output name is always [molTitle].mol2
+        fname = mol.GetTitle()+'.mol2'
 
-            mf1mol = oechem.OEGraphMol( mol )  # make a copy of mol for MMFF94
-            mf2mol = oechem.OEGraphMol( mol )  # make a copy of mol for MMFF94S
+        if dommff:  # Optimize with MMFF94 and MMFF94S. Produce output mol2 files for each.
 
             # create subdirectory for MMFF94 and MMFF94S jobs
             if not os.path.exists(os.path.join(os.getcwd(), 'MMFF94')):
@@ -293,37 +333,26 @@ def load_and_minimize(infiles, dommff, dosmirff, ffxml, dogaff, dogaff2, gaffdir
 
             ### PART ONE: MMFF94
             print('Starting on MMFF94 optimization for %s' % mf1mol.GetTitle())
-            fname = mf1mol.GetTitle()+'.mol2'
-            fulln = os.path.join(os.getcwd()+'/MMFF94', fname)
-            if os.path.exists(fulln):
-                print('Optimization file %s for MMFF94 already exists' % (mol.GetTitle()))
-                continue
-            if not optMMFF(mf1mol, 'MMFF94', fulln):
+            mmff94_file = os.path.join(os.getcwd()+'/MMFF94', fname)
+            if not optMMFF(mf1mol, 'MMFF94', mmff94_file):
                 print('MMFF94 minimization failed for molecule %s:'\
                         %  (mf1mol.GetTitle()) )
-                continue
 
             ### PART TWO: MMFF94S
             print('Starting on MMFF94S optimization for %s' % mf2mol.GetTitle())
-            fname = mf2mol.GetTitle()+'.mol2'
-            fulln = os.path.join(os.getcwd()+'/MMFF94S', fname)
-            if os.path.exists(fulln):
-                print('Optimization file %s for MMFF94S already exists' % (mol.GetTitle()))
-                continue
-            if not optMMFF(mf2mol, 'MMFF94S', fulln):
+            mmff94s_file = os.path.join(os.getcwd()+'/MMFF94S', fname)
+            if not optMMFF(mf2mol, 'MMFF94S', mmff94s_file):
                 print('MMFF94S minimization failed for molecule %s:'\
                         %  (mf2mol.GetTitle()) )
-                continue
 
 
-
-        if dosmirff: # Optimize with smirff99frosst. Produce output mol2 files.
+        if dosmirff: # Optimize with smirnoff ffxml. Produce output mol2 files.
 
             ### Set output file name and make a copy of molecule for opt.
             print('Starting on SMIRFF optimization for %s' % mol.GetTitle())
             if not os.path.exists(os.path.join(os.getcwd(), 'SMIRFF')):
                 os.makedirs(os.path.join(os.getcwd(), 'SMIRFF'))
-            fname = mol.GetTitle()+'.mol2'
+
             fulln = os.path.join(os.getcwd()+'/SMIRFF', fname)
 
             ### Check that optimized file doesn't already exist.
@@ -331,65 +360,27 @@ def load_and_minimize(infiles, dommff, dosmirff, ffxml, dogaff, dogaff2, gaffdir
                 print('Optimization file for %s already exists' % mol.GetTitle())
                 continue
 
-            sfmol = oechem.OEGraphMol( mol)
+            optSMIRFF(mol, ffxml, fulln)
 
-            ### Generate topology, system, and position.
-            top, syst, pos = prepSMIRFF(sfmol, ffxml)
-            parm = topsystem.load_topology(top, system=syst, xyz=pos)
 
-            ### Use parmed to write out the mol2 file from optimized coordinates.
-            parm.positions = minimizeOpenMM(top, syst, pos)
-
-            ### Format OpenMM positions to a form readable to oemol
-            concat_coords = []
-            for atomi in parm.positions:
-                concat_coords += [float(i) for i in atomi._value]
-            sfmol.SetCoords(oechem.OEFloatArray(concat_coords))
-            writeUpdatedMol(sfmol, fulln)
-
-        if dogaff or dogaff2: # Optimize with GAFF or GAFF2. Produce output mol2 files.
+        if dogaff: # Optimize with GAFF. Produce output mol2 files.
 
             ### Set output file name and make a copy of molecule for opt.
-            if not os.path.exists(os.path.join(os.getcwd(), opt.fftype.upper())):
-                os.makedirs(os.path.join(os.getcwd(), opt.fftype.upper()))
-            fname = "%s.mol2" % (mol.GetTitle())
+            if not os.path.exists(os.path.join(os.getcwd(), 'GAFF')):
+                os.makedirs(os.path.join(os.getcwd(), 'GAFF'))
+
             fulln = os.path.join(os.getcwd()+'/'+opt.fftype.upper(), fname)
-            tmpmol = oechem.OEGraphMol( mol)
-            if dogaff: print('Starting on GAFF optimization for %s' % tmpmol.GetTitle())
-            if dogaff2: print('Starting on GAFF2 optimization for %s' % tmpmol.GetTitle())
+            print('Starting on GAFF optimization for %s' % tmpmol.GetTitle())
+            optGAFFx(mol, gaffdir, fulln)
 
-            ### Get relevant files and file names.
-            ffield = opt.fftype.upper()
-            prmFile = os.path.join(gaffdir,mol.GetTitle()+'.prmtop')
-            inpFile = os.path.join(gaffdir,mol.GetTitle()+'.inpcrd')
+        elif dogaff2: # Optimize with GAFF2. Produce output mol2 files.
+            ### Set output file name and make a copy of molecule for opt.
+            if not os.path.exists(os.path.join(os.getcwd(), 'GAFF2')):
+                os.makedirs(os.path.join(os.getcwd(), 'GAFF2'))
 
-            ### Check: optimized file not existing, gaff dependencies present, gaff files have content
-            if os.path.exists(fulln):
-                print('Optimization file %s already exists' % (mol.GetTitle()))
-                continue
-            if not (os.path.exists(prmFile) and os.path.exists(inpFile)):
-                print('%s.inpcrd or %s.prmtop files do not exist' \
- % (mol.GetTitle(), mol.GetTitle()))
-                continue
-            if not (os.path.getsize(prmFile) and os.path.getsize(inpFile) > 0):
-                print('%s.inpcrd or %s.prmtop files are empty' \
- % (mol.GetTitle(), mol.GetTitle()))
-                continue
-
-            parm = parmed.load_file(prmFile, inpFile)
-
-            ### Generate topology, system, and position.
-            top, syst, pos = prepGAFFx(parm)
-
-            ### Use parmed to write out mol2 file from optimized coordinates.
-            parm.positions = minimizeOpenMM(top, syst, pos)
-
-            ### Format OpenMM positions to a form readable to oemol
-            concat_coords = []
-            for atomi in parm.positions:
-                concat_coords += [float(i) for i in atomi._value]
-            tmpmol.SetCoords(oechem.OEFloatArray(concat_coords))
-            writeUpdatedMol(tmpmol, fulln)
+            fulln = os.path.join(os.getcwd()+'/'+opt.fftype.upper(), fname)
+            print('Starting on GAFF2 optimization for %s' % tmpmol.GetTitle())
+            optGAFFx(mol, gaffdir, fulln)
 
 
 # ------------------------- Parse Inputs ----------------------- #
