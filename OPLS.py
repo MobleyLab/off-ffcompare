@@ -12,7 +12,7 @@
 
 
 ### Example usuage:
-# - python OPLS.py --ifile /input_directory/mol2 --opttype fftype > output.dat
+# - python OPLS.py --input /input_directory/mol2 --optimizetype fftype > output.dat
 # - python OPLS.py -i /input_directory/OPLS2005/mol2 -o OPLS2005  > output.dat
 
 ### Dependencies: 
