@@ -6,7 +6,13 @@
 # Victoria Lim (limvt@uci.edu)
 # Caitlin C. Bannan (bannanc@uci.edu)
 
-### Description: This Python script 
+### Description: This Python script calculate the RMSD valuesbetween
+#     each force field. The rms values is output into a txt files as 
+#     "name of molecule/referece force field/query force field/rms"
+### TODO:
+#     1. Add Parse Input to call the script from python i.e python RMSD.py --opls2005...
+#     2. Move the text file out of the function?
+
 import os
 import openeye.oechem as oechem
 
@@ -16,7 +22,7 @@ import openeye.oechem as oechem
 def RMSD(ffRef, ffList, molSet, molName):
     """
     From a set of reference molecules and query molecules, the RMSD values are
-     computed and wrote into a file.  
+     computed and wrote into a text file.  
    
     Parameters
     ---------
@@ -24,10 +30,6 @@ def RMSD(ffRef, ffList, molSet, molName):
     ffList: str - the query forcefield
     molSet: str - set of molecule
     molName: str - name of the molecules
-   
-    Returns
-    -------
-    RMSD values for each molecules with the defined ff
  
     """
     # Set up an error file to record molecule does not exist
@@ -73,7 +75,7 @@ def RMSD(ffRef, ffList, molSet, molName):
         molNames = rmol.GetTitle()
         logFile.write("%s\t%s\t%s\t%.3e\n" % (molNames, ffRef,ffList, rms) )
        
-        # if rms = -1 write into log file
+        # different SMILE strings detected
         if rms == -1:
             oechem.OEThrow.Warning("Negative RMSD's value detected for %s-%s" % (molNames, ffList) )  
             nValue.write("%s\t%s\t%s\t%.3e\n" % (molNames, ffRef, ffList, rms) ) 
@@ -96,6 +98,9 @@ listFFs = ['OPLS2005','OPLS3','GAFF2','GAFF']
 
 # loop through each file in the directory and feed them into the funciton
 for fName in refMols:
-    for queryMol in listFFs:
+    for queryFF in listFFs:
         value = RMSD('SMIRFF',queryMol,'DrugBank',fName)
-        print value
+        print (value)
+        
+#----------------------------Parse Inputs-----------------------------------#
+
