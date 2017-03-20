@@ -1,27 +1,27 @@
 #!/usr/bin/env python
+
 ### Author:
 # Daisy Y. Kyu
 # Nam Thi
 # Victoria Lim (limvt@uci.edu)
 # Caitlin C. Bannan (bannanc@uci.edu)
 
-### Description: This Python script minimize a mol2 files 
-#     with specific forcefield type and location provided.
-#     For N input *.mol2 files, there should be N output
+### Description: This Python script minimizes mol2 files in the
+#     given directory with the specified force field. Minimizations
+#     are completed with the ffld_server utility from Schrodinger.
+#   For N input *.mol2 files, there should be N output
 #     *.mol2 files, unless the input file is missing
 
 
 ### Example usuage:
-# - python OPLS.py --input /input_directory/mol2 --optimizetype fftype > output.dat
-# - python OPLS.py -i /input_directory/OPLS2005/mol2 -o OPLS2005  > output.dat
+# - python OPLS.py --input /input_directory/with/mol2s --optimizetype fftype > output.dat
+# - python OPLS.py -i /input_directory/OPLS2005/with/mol2 -o OPLS2005  > output.dat
 
-### Dependencies: 
-# - For all: needs fftype and location of mol2 files. (-i, -o)
-# - cmd command: refer to the help message in utilities on 
-#   specifying structures from other file formats.
+### Note:
+# - Currently compatible with mol2 file types.
+#   Call `$SCHRODINGER/utilities/ffld_server -hh` for more options.
 
-
-### Supported force field:
+### Supported force fields:
 # - OPLS3
 # - OPLS2005
 
@@ -33,14 +33,15 @@ def OPLSMin(ifile,opttype):
     """
    
     Take one mol2 file and do the minimization, then output into
-    a specific location
+        a specific location.
+    Note: the output directory is specified inside the command line.
+        Refer to the help message in utilities for more information.
    
-    Parameters:
+    Parameters
+    ----------
     ifile: input file directory
     opttpe: force field type
-    Note: the output directory is specified inside the command line.
-          Refer to the help message in utilities for more information.
-    
+
    
     """
 
