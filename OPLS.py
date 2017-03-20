@@ -39,8 +39,8 @@ def OPLSMin(ifile,opttype):
    
     Parameters
     ----------
-    ifile: input file directory
-    opttpe: force field type
+    ifile: string, input file directory.
+    opttype: string, force field type. Either 'OPLS3' or 'OPLS2005'.
 
    
     """
