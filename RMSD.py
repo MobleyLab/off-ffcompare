@@ -45,7 +45,7 @@ def RMSD(ffRef, ffList, molSet, molName):
     # open reference molecule
     refFile = ("/work/cluster/nthi/ForceField-Comparison/%s/%s/%s" % (molSet, ffRef, molName) )
     ifsRef = oechem.oemolistream(refFile)
-    print "Opening reference molecule:", refFile
+    print ("Opening reference molecule:", refFile)
 
     # check if the file exist
     if not ifsRef.open(refFile):
@@ -53,7 +53,7 @@ def RMSD(ffRef, ffList, molSet, molName):
 
     # open query molecule
     queryFile = ("/work/cluster/nthi/ForceField-Comparison/%s/%s/%s" % (molSet, ffList, molName) )
-    print "Opening query molecule: ", queryFile   
+    print ("Opening query molecule: ", queryFile)   
     if os.path.exists(queryFile):
         ifsQuery = oechem.oemolistream(queryFile)
    
