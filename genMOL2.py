@@ -9,7 +9,7 @@
 
 import os
 import time
-import commands
+import subprocess
 import multiprocessing
 import openmoltools
 import openeye.oechem as oechem
@@ -154,11 +154,10 @@ if __name__ == '__main__':
     ff.write(str(inputfile)+('\t%.2f'%delta2)+'\n')
     ff.close()
     # delete extra generated files
-    commands.getoutput('rm ./gaff_mol2/*.frcmod')
-    commands.getoutput('rm ./gaff2_mol2/*.frcmod')
-    commands.getoutput('rm ./ANTECHAMBER*')
-    commands.getoutput('rm ./ATOMTYPE.INF')
-    commands.getoutput('rm ./leap.log')
+    subprocess.call('rm ./gaff_mol2/*.frcmod', shell=True)
+    subprocess.call('rm ./gaff2_mol2/*.frcmod', shell=True)
+    subprocess.call('rm ./ANTECHAMBER*', shell=True)
+    subprocess.call('rm ./ATOMTYPE.INF', shell=True)
 
     # close files
     ifs.close()
