@@ -17,7 +17,7 @@ import openeye.oechem as oechem
 def make_path(filename):
     """
     This function makes subdirectories.
-    
+
     Parameters
     ----------
     filename: String name of directory
@@ -29,16 +29,16 @@ def make_path(filename):
 def GenTriposGAFF(mol):
     """
     This function reads in an OEChem molecule, charges it using the AM1-BCC scheme,
-    and generates a Tripos mol2 file. The Tripos mol2 file is used to create GAFF 
+    and generates a Tripos mol2 file. The Tripos mol2 file is used to create GAFF
     and GAFF2 *.mol2 files, topology files (*.prmtop), and coordinate files (*.inpcrd).
-    
+
     Parameters
     ----------
     mol: OEChem molecule
-    
+
     Returns
     ----------
-    True if the function was successful. 
+    True if the function was successful.
     """
     molName = mol.GetTitle()
 
@@ -119,7 +119,9 @@ if __name__ == '__main__':
             type = "string",
             dest = 'workdir')
     (opt, args) = parser.parse_args()
+    # read input file with all molecules
     inputfile = opt.inputfile
+    ifs = oechem.oemolistream(inputfile)
 
     # change directory to working directory
     os.chdir(opt.workdir)
@@ -128,8 +130,6 @@ if __name__ == '__main__':
     make_path('tripos_mol2/')
     make_path('gaff_mol2/')
     make_path('gaff2_mol2/')
-    # read input file with all molecules
-    ifs = oechem.oemolistream(inputfile)
 
     ff = open("timer.dat","a")
     delta=[]
