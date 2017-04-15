@@ -16,7 +16,7 @@ Here we have created scripts to minimize small molecules using a variety of forc
 
 The following is a list of the force fields being considered here:
 
-* [SMIRNOFF99Frosst](https://github.com/open-forcefield-group/smirff99Frosst)
+* [SMIRNOFF99Frosst](https://github.com/open-forcefield-group/smirnoff99Frosst)
 * [GAFF](http://ambermd.org/antechamber/gaff.html)
 * [GAFF2](https://mulan.swmed.edu/group/gaff.php)
 * [MMFF94](http://open-babel.readthedocs.io/en/latest/Forcefields/mmff94.html)
@@ -26,11 +26,11 @@ The following is a list of the force fields being considered here:
 
 ### Contents
 
-* *ffcompare.py*: Script to read in mol2 files and run minimization using OpenMM (or oechem.OESzybki).
+* `min_oe_openMM.py`: Script to read in mol2 files and run minimization using OpenMM (or oechem.OESzybki).
 
 * *genTriposGAFFandGAFF2.py*: Script to generate mol2 files with Tripos, GAFF, and GAFF2 atom types.
 
-* *smirff99Frosst.ffxml*: FFXML file for SMIRFF
+* *smirnoff99Frosst.ffxml*: FFXML file for SMIRNOFF
 
 * *smi2sdf.py*: Script to generate a collection SDF file from a list of SMILES strings for use in genTriposGAFFandGAFF2.py
 
@@ -52,11 +52,12 @@ ___
 2. Generate Tripos, GAFF, and GAFF2 mol2 files.
     * `python genTriposGAFFandGAFF2.py -i /path/to/sdf/files -l /path/to/output/files` 
 3. Perform minimization.
-   1. Use ffcompare.py to minimize mol2 files with a specified forcefield type (fftype). Supported fftypes include GAFF, GAFF2, MMFF94, MMFF94S and SMIRFF. The inmols flag should specify path to tripos \*.mol2 files (not the mol2 files themselves).
-   * SMIRFF: `python ffcompare.py --fftype smirff --ffxml smirff99Frosst.ffxml --inmols /location/to/triposmol2Files`
-   * GAFF: `python ffcompare.py --fftyle gaff --inmols /location/to/triposmol2Files -g /location/to/gaff_inpcrd_prmtopFiles`
-   * GAFF2: `python ffcompare.py --fftype gaff2 --inmols /location/to/triposmol2Files -g /location/to/gaff2_inpcrd_prmtopFiles`
-   * MMFF94 & MMFF94S: `python ffcompare.py --fftype mmff --inmols /location/to/triposmol2Files`
+   1. Use oe_min_openMM.py to minimize mol2 files with a specified forcefield type (fftype). Supported fftypes include GAFF, GAFF2, MMFF94, MMFF94S and SMIRNOFF. The inmols flag should specify path to tripos \*.mol2 files (not the mol2 files themselves).
+
+    * This script can be used for one or more of the accepted forcefields
+    * All: `python oe_min_openMM.py --inmols /path/triposMol2Files/ --dommff True --ffxml smirnoff99Frosst.ffxml --gaffdir /path/GAFF/Files/ --gaff2dir /path/GAFF2/Files` 
+    * GAFF: `python oe_min_openMM.py --inmols /path/triposMol2Files/ --gaffdir /path/GAFF/Files/`  
+
    2. OPLS.py was used to minimize mol2 files with a specific forcefield type (fftype). Supported fftypes inclue OPLS3, OPLS2005. Input should specifiy path to tripos mol2 files and optimizetype should specify the forcefield type.
    * OPLS3: 'python OPLS.py --input /location/to/triposmol2Files --optimizetype "OPLS3" '
    * OPLS2005: 'python OPLS.py --input /location/to/triposmol2Files --optimizetype "OPLS2005" '
