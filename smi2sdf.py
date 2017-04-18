@@ -12,16 +12,6 @@ import openeye.oechem as oechem
 import openeye.oeomega as oeomega
 import openeye.oeszybki as oeszybki
 
-
-
-### ------------------- Variables -------------------
-
-
-wdir = "/work/cluster/limvt/qm_AlkEthOH/ffcompare/testAlkEthOH"
-smiles = "AlkEthOH_psi.smi"
-
-### ------------------- Functions -------------------
-
 def GenerateConfs(Mol):
     """
     Generate conformers of molecule from its SMILES string.
@@ -48,25 +38,22 @@ def GenerateConfs(Mol):
         return molWithConfs
 
 
-def smi2sdf(wdir, smiles):
+def smi2sdf(sdfout, smiles):
     """
     From a file containing smiles strings, generate omega conformers,
        resolve steric clashes, do a quick MM opt, and write SDF output.
 
     Parameters
     ----------
-    wdir: str - working directory containing .smi file
+    sdfout: str - output sdf file. E.g. "name.sdf"
     smiles: str - name of the smiles file. E.g. "name.smi"
 
     """
-    sdfout = smiles.split('.')[0] + '.sdf'
-    os.chdir(wdir)
-    
     ### Read in smiles file.
     ifs = oechem.oemolistream()
     if not ifs.open(smiles):
         oechem.OEThrow.Warning("Unable to open %s for reading" % smiles)
-    
+
     ### Open output file to write molecules.
     ofs = oechem.oemolostream()
     if os.path.exists(sdfout):
@@ -81,7 +68,7 @@ def smi2sdf(wdir, smiles):
         oechem.OETriposAtomNames(smimol)
         mol = GenerateConfs(smimol)
         oechem.OEWriteConstMolecule(ofs, mol)
-    
+
     ### Close files.
     ifs.close()
     ofs.close()
@@ -100,12 +87,12 @@ def smi2indivSdf(wdir, smiles):
 
     """
     os.chdir(wdir)
-    
+
     ### Read in smiles file.
     ifs = oechem.oemolistream()
     if not ifs.open(smiles):
         oechem.OEThrow.Warning("Unable to open %s for reading" % smiles)
-    
+
 
     ### For each molecule: label atoms, generate 1 conf, write output.
     for i, smimol in enumerate(ifs.GetOEMols()):
@@ -123,14 +110,40 @@ def smi2indivSdf(wdir, smiles):
             oechem.OEThrow.Fatal("Unable to open %s for writing" % sdfout)
         oechem.OEWriteConstMolecule(ofs, mol)
         ofs.close()
-    
+
     ### Close files.
     ifs.close()
 
-# ----------------- Script -----------------------------------------
+# ----------------- Run from commandline  ----------------------------------
 
-# specify working directory and smiles (at the top)
-# then call either smi2sdf or smi2indivSdf
+if __name__ == '__main__':
+    from optparse import OptionParser
 
-smi2sdf(wdir, smiles)
-#smi2indivSdf(wdir, smiles)
+    usage_string = """
+    This script is used to convert a list of SMILES string
+    to an sdf file with all molecules.
+    smi files have the format:
+    [SMILES] [Name]
+
+    usage:
+    python smi2sdf.py --smiles smilesFile.smi --wdir working/directory/
+    """
+    parser = OptionParser(usage = usage_string)
+    parser.add_option('-s', '--smiles',
+            help = "REQUIRED! SMILES file",
+            type = "string",
+            dest = "smiles")
+
+    parser.add_option('-o', '--sdf',
+            help = "REQUIRED! output sdf file",
+            type = "string",
+            dest = "sdf")
+
+    (opt, args) = parser.parse_args()
+
+    if opt.smiles is None:
+        parser.error("Must provide smiles file")
+    if opt.sdf is None:
+        parser.error("Must provide a working directory")
+
+    smi2sdf(opt.sdf, opt.smiles)
