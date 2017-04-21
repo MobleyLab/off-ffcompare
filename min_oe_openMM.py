@@ -55,7 +55,6 @@ from simtk.openmm import app
 
 from smarty import forcefield
 from smarty import forcefield_utils as ff_utils
-from smarty import utils
 
 
 # -------------------------- Functions ------------------------- #
@@ -173,7 +172,7 @@ def optSMIRNOFF(input_Mol, FF_file, output_mol2, log ):
 
     ### minimize with OpenMM and return the final coordinates in the OEform
     min_pos = minimizeOpenMM(top, syst, pos)
-    utils.setPositionsInOEMol(Mol, min_pos)
+    Mol.SetCoords(oechem.OEFloatArray(min_pos))
 
     return writeUpdatedMol(Mol, output_mol2, log)
 
@@ -231,7 +230,7 @@ def optGAFFx(mol, gaffdir, output_mol2, log):
 
     ### Use parmed to write out mol2 file from optimized coordinates.
     minimized_positions = minimizeOpenMM(Topology, System, Positions)
-    utils.setPositionsInOEMol(tmpmol, minimized_positions)
+    tmpmol.SetCoords(oechem.OEFloatArray(minimized_positions))
 
     return writeUpdatedMol(tmpmol, output_mol2, log)
 
@@ -251,7 +250,7 @@ def minimizeOpenMM(Topology, System, Positions):
 
     Returns
     -------
-    concat_coords: list of positions to write to an OEMol
+    concat_coords: list of positions ready to add to an OEMol
 
     """
 
@@ -265,9 +264,12 @@ def minimizeOpenMM(Topology, System, Positions):
     simulation.context.setPositions(Positions)
     simulation.minimizeEnergy(tolerance=5.0E-9, maxIterations=1500)
 
-    return simulation.context.getState(getPositions=True).getPositions(asNumpy=True)
-
-
+    positions =  simulation.context.getState(getPositions=True).getPositions(asNumpy=True)
+    positions = positions/u.angstroms
+    coordlist = list()
+    for atom_coords in positions:
+        coordlist += [i for i in atom_coords]
+    return coordlist
 
 
 # --------------------------- Main Function ------------------------- #
