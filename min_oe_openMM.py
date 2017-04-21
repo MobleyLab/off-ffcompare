@@ -41,30 +41,24 @@ Mobley Lab UCI
 ### To do / Ideas:
 """
 
-import os, sys, glob
+import os, glob
 import numpy as np
 
 import openeye.oechem as oechem
-import openeye.oeomega as oeomega
 import openeye.oeszybki as oeszybki
 
 import parmed
-from parmed.openmm import topsystem
 from parmed import unit as u
 
 import simtk.openmm as mm
 from simtk.openmm import app
-from simtk.openmm import Platform
-from simtk.unit import *
 
 from smarty import forcefield
 from smarty import forcefield_utils as ff_utils
-
-
+from smarty import utils
 
 
 # -------------------------- Functions ------------------------- #
-
 
 def writeUpdatedMol(Mol, fname, log):
     """
@@ -175,12 +169,12 @@ def optSMIRNOFF(input_Mol, FF_file, output_mol2, log ):
         return
 
     ff = forcefield.ForceField(FF_file)
-    Topology, System, Positions = ff_utils.create_system_from_molecule(ff, Mol, verbose = False)
+    top, syst, pos  = ff_utils.create_system_from_molecule(ff, Mol, verbose = False)
 
     ### minimize with OpenMM and return the final coordinates in the OEform
-    coords = minimizeOpenMM(Topology, System, Positions)
+    min_pos = minimizeOpenMM(top, syst, pos)
+    utils.setPositionsInOEMol(Mol, min_pos)
 
-    Mol.SetCoords(oechem.OEFloatArray(coords))
     return writeUpdatedMol(Mol, output_mol2, log)
 
 
@@ -236,9 +230,9 @@ def optGAFFx(mol, gaffdir, output_mol2, log):
     System = parm.createSystem(nonbondedMethod=app.NoCutoff)
 
     ### Use parmed to write out mol2 file from optimized coordinates.
-    coords = minimizeOpenMM(Topology, System, Positions)
+    minimized_positions = minimizeOpenMM(Topology, System, Positions)
+    utils.setPositionsInOEMol(tmpmol, minimized_positions)
 
-    tmpmol.SetCoords(oechem.OEFloatArray(coords))
     return writeUpdatedMol(tmpmol, output_mol2, log)
 
 
@@ -269,17 +263,9 @@ def minimizeOpenMM(Topology, System, Positions):
 
     simulation = app.Simulation(Topology, System, integrator)
     simulation.context.setPositions(Positions)
-    #simulation.minimizeEnergy()
     simulation.minimizeEnergy(tolerance=5.0E-9, maxIterations=1500)
 
-    Topology.positions = simulation.context.getState(getPositions=True).getPositions(asNumpy=True)
-
-    ### Format OpenMM positions to a form readable to oemol
-    concat_coords = []
-    for atomi in Topology.positions:
-        concat_coords += [float(i) for i in atomi._value]
-
-    return concat_coords
+    return simulation.context.getState(getPositions=True).getPositions(asNumpy=True)
 
 
 
@@ -375,7 +361,7 @@ def load_and_minimize(infiles, log, output_dir,
                 os.makedirs(os.path.join(output_dir, 'GAFF'))
 
             fulln = os.path.join(output_dir+'/GAFF', fname)
-            log.write('Starting on GAFF optimization for %s\n'\
+            print('Starting on GAFF optimization for %s\n'\
                     % mol.GetTitle())
             optGAFFx(mol, gaff, fulln, log)
 
