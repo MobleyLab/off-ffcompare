@@ -59,8 +59,8 @@ ___
     * GAFF: `python oe_min_openMM.py --inmols /path/triposMol2Files/ --gaffdir /path/GAFF/Files/`  
 
    2. OPLS.py was used to minimize mol2 files with a specific forcefield type (fftype). Supported fftypes inclue OPLS3, OPLS2005. Input should specifiy path to tripos mol2 files and optimizetype should specify the forcefield type.
-   * OPLS3: 'python OPLS.py --input /location/to/triposmol2Files --optimizetype "OPLS3" '
-   * OPLS2005: 'python OPLS.py --input /location/to/triposmol2Files --optimizetype "OPLS2005" '
+   * OPLS3: `python OPLS.py --input /path/to/triposmol2Files --optimizetype "OPLS3" --outdir /path/output_directory/`
+   * OPLS2005: `python OPLS.py --input /path/to/triposmol2Files --optimizetype "OPLS2005" --outdir /path/output_directory/`
       
 4. Evaluate RMSD.
-   * [Nam fill this in with the python command]
+   * `python --ref [name of reference force-field] --compare [names of compared force fields] --directory /path/containing/directories`
