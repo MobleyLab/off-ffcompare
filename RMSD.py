@@ -107,7 +107,7 @@ if __name__ == '__main__':
 
 
     # set up an error file to record molecule does not exist
-    errFile = open('%s/rmsd_logfile.txt' % directory,'a')
+    errFile = open('%s/rmsd_errfile.txt' % directory,'a')
     # set up a file to catch negative value
     nValue = open('%s/negative_value.txt' % directory,'a')
     # set up a log file for RMSD

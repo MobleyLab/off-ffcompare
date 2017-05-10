@@ -33,7 +33,7 @@ import sys
 
 def OPLS3_minimize(in_mol2, out_mol2):
     """
-    Performs a minimization using OPLS3 on the input mol2 file 
+    Performs a minimization using OPLS3 on the input mol2 file
     Assumes the input and output files have already been checked
 
     Parameters
@@ -49,7 +49,7 @@ def OPLS3_minimize(in_mol2, out_mol2):
 
 def OPLS2005_minimize(in_mol2, out_mol2):
     """
-    Performs a minimization using OPLS2005 on the input mol2 file 
+    Performs a minimization using OPLS2005 on the input mol2 file
     Assumes the input and output files have already been checked
 
     Parameters
@@ -70,29 +70,33 @@ if __name__ == '__main__':
     from optparse import OptionParser
 
     usage_string="""\
-            This script is used to minimize molecules in mol2 files 
+            This script is used to minimize molecules in mol2 files
             with OPLS3 or OPLS2005. You must have an environment variable
-            $SCHRODINGER in order for the minimizations to work. 
-            
-            usage: python OPLS.py --idir [path to mol2 directory] 
+            $SCHRODINGER in order for the minimizations to work.
+
+            usage: python OPLS.py --idir [path to mol2 directory]
             --dir2005 [path to OPLS2005 output directory]
             --dir3 [path to OPLS3 output directory]
+
+            if both dir2005 and dir3 are None then no minimizations occur.
+            If dir2005 or dir3 are not None, but the directory doesn't exist
+            then it is created.
             """
 
     parser = OptionParser(usage=usage_string)
 
     parser.add_option('-i','--idir',
-            help = "Path to directory containing all mol2 files to be minimized.",
+            help = "REQUIRED: Path to directory containing all mol2 files to be minimized.",
             type = "string",
             dest = 'idir')
 
     parser.add_option('-d','--dir2005',
-            help = "Directory for OPLS2005 minimization results, required for OPLS2005 minimization",
+            help = "OPTIONAL: Directory for OPLS2005 minimization results, required for OPLS2005 minimization",
             type = "string",
             dest = 'dir2005')
 
     parser.add_option('-D', '--dir3',
-            help = "Directory for OPLS3 minimization results, required for OPLS3 minimization",
+            help = "OPTIONAL: Directory for OPLS3 minimization results, required for OPLS3 minimization",
             type = "string",
             dest = 'dir3')
 
@@ -103,7 +107,7 @@ if __name__ == '__main__':
         parser.error("ERROR: you must provide an input file")
     if not os.path.isdir(opt.idir):
         parser.print_help()
-        parser.error("ERROR: input directory (%s) does not exist" % opt.idir) 
+        parser.error("ERROR: input directory (%s) does not exist" % opt.idir)
 
     # Check that at least one output directory exists
     if opt.dir3 is None and opt.dir2005 is None:
@@ -112,13 +116,12 @@ if __name__ == '__main__':
 
     # check the the not None directory exists
     if opt.dir3 is not None and (not os.path.isdir(opt.dir3)):
-        parser.print_help()
-        parser.error("ERROR: output directory for OPLS3 (%s) does not exist" % opt.dir3)
+        os.mkdir(opt.dir3)
+    # if it doesn't exist create it
     if opt.dir2005 is not None and (not os.path.isdir(opt.dir2005)):
-        parser.print_help()
-        parser.error("ERROR: output directory for OPLS2005 (%s) does not exist" % opt.dir2005)
+        os.mkdir(opt.dir2005)
 
-    # check schrodinger utilities tool directory at least exists 
+    # check schrodinger utilities tool directory at least exists
     try:
         os.environ.get('SCHRODINGER')
     except:
