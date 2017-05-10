@@ -122,8 +122,8 @@ if __name__ == '__main__':
         logFile.write("# Molecue Set Directory: %s \n" % directory)
 
         refMols = os.listdir(directory + '/' + ref + '/')
-        ff_string = "\t".join(listFFs)
-        logFile.write("# MolName \t %30s \n" % ff_string)
+        ff_string = "\t".join(['%-9s' % f for f in listFFs])
+        logFile.write("%-20s\t%s\n" % ("# MolName", ff_string))
 
         # loop through each file in the directory and feed them into the funciton
         for mol2_file in refMols:
@@ -149,7 +149,7 @@ if __name__ == '__main__':
 
             #for each query mol2 file that match reference mol2 file, write out the rms value to the list
             rms_string = "\t".join(rms_list)
-            logFile.write("%5s\t%s\n" % (molName,rms_string))
+            logFile.write("%-20s\t%s\n" % (molName,rms_string))
 
         logFile.write('#\n')
     errFile.close()
