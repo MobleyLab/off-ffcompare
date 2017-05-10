@@ -115,11 +115,14 @@ if __name__ == '__main__':
 
     # Split up reference and compare force fields
     refFFs = opt.ref.split(',')
-    listFFs = opt.compare.split(',')
 
     for ref in refFFs:
         logFile.write("# Reference Force Field: %s \n" % ref)
         logFile.write("# Molecue Set Directory: %s \n" % directory)
+
+        # get the list of comparison force fields and remove reference
+        listFFs = opt.compare.split(',')
+        listFFs.remove(ref)
 
         refMols = os.listdir(directory + '/' + ref + '/')
         ff_string = "\t".join(['%-9s' % f for f in listFFs])
@@ -127,11 +130,14 @@ if __name__ == '__main__':
 
         # loop through each file in the directory and feed them into the funciton
         for mol2_file in refMols:
+            # skip non-mol2 files
+            if mol2_file.split('.')[-1] != 'mol2':
+                continue
             rms_list = list()
             molName = mol2_file.split('.')[0]
-            for queryMol in listFFs:
+            for queryFF in listFFs:
                 ref_file = directory + '/' + ref + '/' + mol2_file
-                query_file = directory + '/' + queryMol + '/' + mol2_file
+                query_file = directory + '/' + queryFF + '/' + mol2_file
                 value =  RMSD(ref_file,query_file)
 
                 # different SMILE strings detected
