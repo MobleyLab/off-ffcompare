@@ -58,7 +58,7 @@ def smi2sdf(sdfout, smiles):
     ofs = oechem.oemolostream()
     if os.path.exists(sdfout):
         #sys.exit("Output .sdf file already exists. Exiting.\n")
-        print "Output .sdf file already exists. Exiting.\n"
+        print("Output .sdf file already exists. Exiting.\n")
         return
     if not ofs.open(sdfout):
         oechem.OEThrow.Fatal("Unable to open %s for writing" % sdfout)
@@ -104,7 +104,7 @@ def smi2indivSdf(wdir, smiles):
         ofs = oechem.oemolostream()
         if os.path.exists(sdfout):
             #sys.exit("Output .sdf file already exists. Exiting.\n")
-            print "Output .sdf file already exists. Exiting.\n"
+            print("Output .sdf file already exists. Exiting.\n")
             return
         if not ofs.open(sdfout):
             oechem.OEThrow.Fatal("Unable to open %s for writing" % sdfout)
