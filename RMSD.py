@@ -6,10 +6,9 @@
 # Victoria Lim (limvt@uci.edu)
 # Caitlin C. Bannan (bannanc@uci.edu)
 
-### Description: This Python script calculate the RMSD valuesbetween
-#     each force field. The rms values is output into a txt files as
-#     "name of molecule/referece force field/query force field/rms"
-### TODO:
+### Description: This Python script calculates the RMSD values between
+#     specified force fields. The values are output into a 'RMSD.txt'
+#     or some user-specified output file.
 
 import os
 import openeye.oechem as oechem
@@ -19,14 +18,17 @@ import openeye.oechem as oechem
 
 def RMSD(ref_mol2, query_mol2):
     """
-    From a set of reference molecules and query molecules, the RMSD values are
-    computed and wrote into a file.
+    From one input reference molecule and one input query molecule,
+    the RMSD is computed and returned.
 
     Parameters
     ---------
     ref_mol2: str - mol2 file of the reference force field
     query_mol2: str - mol2 file of the query force field
-
+    
+    Returns
+    -------
+    rms: float - RMSD in Angstroms
 
     """
 
@@ -85,7 +87,7 @@ if __name__ == '__main__':
             dest = 'directory')
 
     parser.add_option('-o', '--output',
-            help = "OPTIONAL: Name of output file with results, it will be saved to the specified directory. If None provided RMSD.txt is used",
+            help = "OPTIONAL: Name of results output file. This will be saved to the directory with force fields. If no output file is specified, RMSD.txt is used.",
             type = 'string',
             dest = 'output',
             default = 'RMSD.txt')
@@ -98,7 +100,7 @@ if __name__ == '__main__':
     if opt.compare == None:
         parser.error("ERROR: No force field was specified.")
     if opt.directory == None:
-        print("no working directory provided using current directory")
+        print("No working directory provided. Using current directory.")
         directory = os.getcwd()
     else:
         directory = opt.directory
@@ -116,7 +118,7 @@ if __name__ == '__main__':
 
     for ref in refFFs:
         logFile.write("# Reference Force Field: %s \n" % ref)
-        logFile.write("# Molecue Set Directory: %s \n" % directory)
+        logFile.write("# Molecule Set Directory: %s \n" % directory)
 
         # get the list of comparison force fields and remove reference
         listFFs = opt.compare.split(',')
@@ -140,7 +142,7 @@ if __name__ == '__main__':
 
                 # different SMILE strings detected
                 if value == -1:
-                    oechem.OEThrow.Warning("Negative RMSD's value detected for %s-%s" % (molName, value) )
+                    oechem.OEThrow.Warning("Negative RMSD value detected for %s: %s" % (molName, value) )
                     nValue.write("%s\t%s\t%s\t%.3e\n" % (molName, ref, queryMol, value) )
                     rms_list.append("Neg\t")
                 # write mol2 file that does not exist into a file
