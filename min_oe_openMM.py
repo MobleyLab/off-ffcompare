@@ -53,9 +53,7 @@ from parmed import unit as u
 import simtk.openmm as mm
 from simtk.openmm import app
 
-#from smarty import forcefield
 from openforcefield.typing.engines.smirnoff import forcefield
-#from smarty import forcefield_utils as ff_utils
 from openforcefield.typing.engines.smirnoff import forcefield_utils as ff_utils
 
 
