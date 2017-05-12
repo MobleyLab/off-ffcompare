@@ -58,7 +58,7 @@ def smi2sdf(sdfout, smiles):
     ofs = oechem.oemolostream()
     if os.path.exists(sdfout):
         #sys.exit("Output .sdf file already exists. Exiting.\n")
-        print "Output .sdf file already exists. Exiting.\n"
+        print("Output .sdf file already exists. Exiting.\n")
         return
     if not ofs.open(sdfout):
         oechem.OEThrow.Fatal("Unable to open %s for writing" % sdfout)
@@ -104,7 +104,7 @@ def smi2indivSdf(wdir, smiles):
         ofs = oechem.oemolostream()
         if os.path.exists(sdfout):
             #sys.exit("Output .sdf file already exists. Exiting.\n")
-            print "Output .sdf file already exists. Exiting.\n"
+            print("Output .sdf file already exists. Exiting.\n")
             return
         if not ofs.open(sdfout):
             oechem.OEThrow.Fatal("Unable to open %s for writing" % sdfout)
@@ -144,6 +144,6 @@ if __name__ == '__main__':
     if opt.smiles is None:
         parser.error("Must provide smiles file")
     if opt.sdf is None:
-        parser.error("Must provide a working directory")
+        parser.error("Must provide output SDF filename")
 
     smi2sdf(opt.sdf, opt.smiles)

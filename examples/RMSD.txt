@@ -1,0 +1,86 @@
+# Reference Force Field: SMIRNOFF 
+# Molecue Set Directory: examples/ 
+# Reference Force Field: SMIRNOFF 
+# Molecue Set Directory: examples/ 
+# MolName           	GAFF     	GAFF2    	MMFF94   	MMFF94S  	OPLS2005 	OPLS3    
+AlkEthOH_c42        	2.525e-02	4.161e-02	2.616e-02	2.616e-02	8.488e-02	2.902e-02
+AlkEthOH_c80        	3.923e-02	6.863e-02	3.149e-02	3.149e-02	5.805e-02	3.547e-02
+#
+# Reference Force Field: GAFF 
+# Molecue Set Directory: examples/ 
+# MolName           	SMIRNOFF 	GAFF2    	MMFF94   	MMFF94S  	OPLS2005 	OPLS3    
+AlkEthOH_c42        	2.525e-02	1.971e-02	2.812e-02	2.812e-02	7.368e-02	2.729e-02
+AlkEthOH_c80        	3.923e-02	3.773e-02	4.155e-02	4.155e-02	4.519e-02	2.255e-02
+#
+# Reference Force Field: GAFF2 
+# Molecue Set Directory: examples/ 
+# MolName           	SMIRNOFF 	GAFF     	MMFF94   	MMFF94S  	OPLS2005 	OPLS3    
+AlkEthOH_c42        	4.161e-02	1.971e-02	3.969e-02	3.969e-02	6.663e-02	3.707e-02
+AlkEthOH_c80        	6.863e-02	3.773e-02	7.092e-02	7.092e-02	5.136e-02	4.959e-02
+#
+# Reference Force Field: MMFF94 
+# Molecue Set Directory: examples/ 
+# MolName           	SMIRNOFF 	GAFF     	GAFF2    	MMFF94S  	OPLS2005 	OPLS3    
+AlkEthOH_c42        	2.616e-02	2.812e-02	3.969e-02	0.000e+00	7.324e-02	2.735e-02
+AlkEthOH_c80        	3.149e-02	4.155e-02	7.092e-02	0.000e+00	6.263e-02	3.901e-02
+#
+# Reference Force Field: MMFF94S 
+# Molecue Set Directory: examples/ 
+# MolName           	SMIRNOFF 	GAFF     	GAFF2    	MMFF94   	OPLS2005 	OPLS3    
+AlkEthOH_c42        	2.616e-02	2.812e-02	3.969e-02	0.000e+00	7.324e-02	2.735e-02
+AlkEthOH_c80        	3.149e-02	4.155e-02	7.092e-02	0.000e+00	6.263e-02	3.901e-02
+#
+# Reference Force Field: OPLS2005 
+# Molecue Set Directory: examples/ 
+# MolName           	SMIRNOFF 	GAFF     	GAFF2    	MMFF94   	MMFF94S  	OPLS3    
+AlkEthOH_c42        	8.488e-02	7.368e-02	6.663e-02	7.324e-02	7.324e-02	7.803e-02
+AlkEthOH_c80        	5.805e-02	4.519e-02	5.136e-02	6.263e-02	6.263e-02	4.440e-02
+#
+# Reference Force Field: OPLS3 
+# Molecue Set Directory: examples/ 
+# MolName           	SMIRNOFF 	GAFF     	GAFF2    	MMFF94   	MMFF94S  	OPLS2005 
+AlkEthOH_c42        	2.902e-02	2.729e-02	3.707e-02	2.735e-02	2.735e-02	7.803e-02
+AlkEthOH_c80        	3.547e-02	2.255e-02	4.959e-02	3.901e-02	3.901e-02	4.440e-02
+#
+# Reference Force Field: SMIRNOFF 
+# Molecue Set Directory: examples/ 
+# MolName           	GAFF     	GAFF2    	MMFF94   	MMFF94S  	OPLS2005 	OPLS3    
+AlkEthOH_c42        	2.525e-02	4.161e-02	2.616e-02	2.616e-02	8.488e-02	2.902e-02
+AlkEthOH_c80        	3.923e-02	6.863e-02	3.149e-02	3.149e-02	5.805e-02	3.547e-02
+#
+# Reference Force Field: GAFF 
+# Molecue Set Directory: examples/ 
+# MolName           	SMIRNOFF 	GAFF2    	MMFF94   	MMFF94S  	OPLS2005 	OPLS3    
+AlkEthOH_c42        	2.525e-02	1.971e-02	2.812e-02	2.812e-02	7.368e-02	2.729e-02
+AlkEthOH_c80        	3.923e-02	3.773e-02	4.155e-02	4.155e-02	4.519e-02	2.255e-02
+#
+# Reference Force Field: GAFF2 
+# Molecue Set Directory: examples/ 
+# MolName           	SMIRNOFF 	GAFF     	MMFF94   	MMFF94S  	OPLS2005 	OPLS3    
+AlkEthOH_c42        	4.161e-02	1.971e-02	3.969e-02	3.969e-02	6.663e-02	3.707e-02
+AlkEthOH_c80        	6.863e-02	3.773e-02	7.092e-02	7.092e-02	5.136e-02	4.959e-02
+#
+# Reference Force Field: MMFF94 
+# Molecue Set Directory: examples/ 
+# MolName           	SMIRNOFF 	GAFF     	GAFF2    	MMFF94S  	OPLS2005 	OPLS3    
+AlkEthOH_c42        	2.616e-02	2.812e-02	3.969e-02	0.000e+00	7.324e-02	2.735e-02
+AlkEthOH_c80        	3.149e-02	4.155e-02	7.092e-02	0.000e+00	6.263e-02	3.901e-02
+#
+# Reference Force Field: MMFF94S 
+# Molecue Set Directory: examples/ 
+# MolName           	SMIRNOFF 	GAFF     	GAFF2    	MMFF94   	OPLS2005 	OPLS3    
+AlkEthOH_c42        	2.616e-02	2.812e-02	3.969e-02	0.000e+00	7.324e-02	2.735e-02
+AlkEthOH_c80        	3.149e-02	4.155e-02	7.092e-02	0.000e+00	6.263e-02	3.901e-02
+#
+# Reference Force Field: OPLS2005 
+# Molecue Set Directory: examples/ 
+# MolName           	SMIRNOFF 	GAFF     	GAFF2    	MMFF94   	MMFF94S  	OPLS3    
+AlkEthOH_c42        	8.488e-02	7.368e-02	6.663e-02	7.324e-02	7.324e-02	7.803e-02
+AlkEthOH_c80        	5.805e-02	4.519e-02	5.136e-02	6.263e-02	6.263e-02	4.440e-02
+#
+# Reference Force Field: OPLS3 
+# Molecue Set Directory: examples/ 
+# MolName           	SMIRNOFF 	GAFF     	GAFF2    	MMFF94   	MMFF94S  	OPLS2005 
+AlkEthOH_c42        	2.902e-02	2.729e-02	3.707e-02	2.735e-02	2.735e-02	7.803e-02
+AlkEthOH_c80        	3.547e-02	2.255e-02	4.959e-02	3.901e-02	3.901e-02	4.440e-02
+#

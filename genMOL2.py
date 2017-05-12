@@ -56,10 +56,10 @@ def GenTriposGAFF(mol):
         try:
             chgmol = openmoltools.openeye.get_charges(mol, keep_confs=1)
             #chgmol = openmoltools.openeye.get_charges(mol, keep_confs=1)
-        except RuntimeError, e: # catch specified warning or Runtime error
-            print("Skipping %s in %s due to RuntimeError." % (mol.GetTitle(), inputfile))
+        except RuntimeError as e: # catch specified warning or Runtime error
+            print("Skipping %s in %s due to RuntimeError during charging." % (mol.GetTitle(), inputfile))
             return False
-        except ValueError, e:
+        except ValueError as e:
             print("Skipping %s in %s due to ValueError." % (mol.GetTitle(), inputfile))
             return False
         # reset the title to original title (get_charges renames mol)
@@ -90,10 +90,10 @@ def GenTriposGAFF(mol):
             openmoltools.amber.run_tleap(molName, 'gaff2_mol2/%s.mol2' % molName,\
              'gaff2_mol2/%s.frcmod' % molName, prmtop_filename = 'gaff2_mol2/%s.prmtop'\
              % molName, inpcrd_filename = 'gaff2_mol2/%s.inpcrd' % molName, leaprc = 'leaprc.gaff2')
-        except IOError, e:
+        except IOError as e:
             print ("Skipping %s in %s due to IOError." % (mol.GetTitle(), inputfile))
             return False
-        except RuntimeError, e:
+        except RuntimeError as e:
             print ("Skipping %s in %s due to RuntimeError for GAFF2." % (mol.GetTitle(), inputfile))
             return False
     else:
@@ -134,6 +134,7 @@ if __name__ == '__main__':
     ff = open("timer.dat","a")
     delta=[]
     for mol in ifs.GetOEMols():
+        print("creating input files for %s ..." % mol.GetTitle())
         start = time.clock()
         try:
             tstart = time.clock()
@@ -144,8 +145,8 @@ if __name__ == '__main__':
                 print("Skipping %s in %s due to timeout after 25 sec" % (mol.GetTitle(), inputfile))
                 p.terminate()
                 p.join()
-        except Exception, e:
-            print e, mol.GetTitle()
+        except Exception as e:
+            print(e, mol.GetTitle())
             continue
         end = time.clock()
         delta.append( end - start)

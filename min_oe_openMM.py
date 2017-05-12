@@ -53,8 +53,8 @@ from parmed import unit as u
 import simtk.openmm as mm
 from simtk.openmm import app
 
-from smarty import forcefield
-from smarty import forcefield_utils as ff_utils
+from openforcefield.typing.engines.smirnoff import forcefield
+from openforcefield.typing.engines.smirnoff import forcefield_utils as ff_utils
 
 
 # -------------------------- Functions ------------------------- #
@@ -454,10 +454,12 @@ in the output directory. Default is output.dat.",
             dest = 'log')
 
     (opt, args) = parser.parse_args()
-
     ### Check required fields.
     if opt.inmols is None:
         parser.error("ERROR: No input directory was specified.")
+    ### Check inmols exists!
+    if not os.path.isdir(opt.inmols):
+        parser.error("ERROR: input directory (%s) was not found" % opt.inmols)
 
     dommff = opt.dommff == 'True'
 
