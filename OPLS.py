@@ -143,8 +143,8 @@ if __name__ == '__main__':
         if opt.dir2005 is not None:
             out_mol2 = "%s/%s" % (opt.dir2005, mol2_basename)
             # check if out_mol2 exists:
-            if os.path.isfile(out_mol2):
-                print("OPLS2005 output (%s) already exists skipping" % out_mol2)
+            if os.path.isfile(out_mol2) and os.path.getsize(out_mol2) > 0:
+                print("Skipping OPLS2005 output (%s) already exists and is not empty." % out_mol2)
             else:
                 print("Minimizing with OPLS2005...")
                 OPLS2005_minimize(mol2, out_mol2)
@@ -152,8 +152,8 @@ if __name__ == '__main__':
         if opt.dir3 is not None:
             out_mol2 = "%s/%s" % (opt.dir3, mol2_basename)
             # check if out_mol2 exists:
-            if os.path.isfile(out_mol2):
-                print("OPLS3 output (%s) already exists skipping" % out_mol2)
+            if os.path.isfile(out_mol2) and os.path.getsize(out_mol2) > 0:
+                print("Skipping OPLS3 output (%s) already exists and is not empty." % out_mol2)
             else:
                 print("Minimizing with OPLS3...")
                 OPLS3_minimize(mol2, out_mol2)

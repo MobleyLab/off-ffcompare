@@ -10,8 +10,6 @@
 #     each force field. The rms values is output into a txt files as
 #     "name of molecule/referece force field/query force field/rms"
 ### TODO:
-#     1. Add Parse Input to call the script from python i.e python RMSD.py --opls2005...
-#     2. Move the text file out of the function?
 
 import os
 import openeye.oechem as oechem
@@ -59,8 +57,8 @@ def RMSD(ref_mol2, query_mol2):
         oechem.OEReadMolecule(ifsRef,rmol)
         oechem.OEReadMolecule(ifsQuery,qmol)
 
-        # rmsd calculate
-        rms = oechem.OERMSD(rmol,qmol, True, True , True)
+        # calculate rmsd setting automorph, heavyOnly, and overlay to True
+        rms = oechem.OERMSD(rmol,qmol, True, True, True)
     else:
         rms = -2
     return rms
