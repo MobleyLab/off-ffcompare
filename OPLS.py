@@ -10,12 +10,12 @@
 #     given directory with the specified force field. Minimizations
 #     are completed with the ffld_server utility from Schrodinger.
 #   For N input *.mol2 files, there should be N output
-#     *.mol2 files, unless the input file is missing
+#     *.mol2 files for which ever force field(s) are specified.
 
 
 ### Example usuage:
-# - python OPLS.py --idir /input_directory/with/mol2s --optimizetype fftype > output.dat
-# - python OPLS.py -i /input_directory/OPLS2005/with/mol2 -o OPLS2005  > output.dat
+# - python OPLS.py --idir /input_directory/with/mol2s --dir2005 output/directory/OPLS2005 --dir3 output/directory/OPLS3 > output.dat
+# - python OPLS.py -i /input_directory/with/mol2s -d output/directory/OPLS2005 -D output/directory/OPLS3 > output.dat
 
 ### Note:
 # - Currently compatible with mol2 file types.
@@ -104,7 +104,7 @@ if __name__ == '__main__':
     # Check input directory
     if opt.idir is None:
         parser.print_help()
-        parser.error("ERROR: you must provide an input file")
+        parser.error("ERROR: you must provide an input directory")
     if not os.path.isdir(opt.idir):
         parser.print_help()
         parser.error("ERROR: input directory (%s) does not exist" % opt.idir)
