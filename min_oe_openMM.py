@@ -115,7 +115,7 @@ def optMMFF(Mol, FF, fname, log):
 
     # set general energy options along with the run type specification
     optSzybki = oeszybki.OESzybkiOptions()
-    optSzybki.SetSolventModel(oeszybki.OESolventModel_Sheffield)
+    optSzybki.SetSolventModel(oeszybki.OESolventModel_NoSolv)
     optSzybki.SetOptimizerType(oeszybki.OEOptType_BFGS)
 
     # set the particular force field
