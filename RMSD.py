@@ -115,20 +115,20 @@ if __name__ == '__main__':
 
     # Split up reference and compare force fields
     refFFs = opt.ref.split(',')
-
+    
     for ref in refFFs:
         logFile.write("# Reference Force Field: %s \n" % ref)
         logFile.write("# Molecule Set Directory: %s \n" % directory)
 
         # get the list of comparison force fields and remove reference
         listFFs = opt.compare.split(',')
-        listFFs.remove(ref)
+        #listFFs.remove(ref)
 
         refMols = os.listdir(directory + '/' + ref + '/')
         ff_string = "\t".join(['%-9s' % f for f in listFFs])
         logFile.write("%-20s\t%s\n" % ("# MolName", ff_string))
 
-        # loop through each file in the directory and feed them into the funciton
+        # loop through each file in the directory and feed them into the function
         for mol2_file in refMols:
             # skip non-mol2 files
             if mol2_file.split('.')[-1] != 'mol2':
@@ -143,7 +143,7 @@ if __name__ == '__main__':
                 # different SMILE strings detected
                 if value == -1:
                     oechem.OEThrow.Warning("Negative RMSD value detected for %s: %s" % (molName, value) )
-                    nValue.write("%s\t%s\t%s\t%.3e\n" % (molName, ref, queryMol, value) )
+                    nValue.write("%s\t%s\t%s\t%.3e\n" % (molName, ref, query_file, value) )
                     rms_list.append("Neg\t")
                 # write mol2 file that does not exist into a file
                 elif value == -2:
