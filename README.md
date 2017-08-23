@@ -35,6 +35,7 @@ The following is a list of the force fields being considered here:
 |MDTRAJ               | 1.7.2     |
 |ParmEd               | 2.6.1     |
 |OpenForceField       | 0.1.6     |
+|Schrodinger          | 2017-2    |
 
 ### Contents
 
