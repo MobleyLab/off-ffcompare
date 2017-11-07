@@ -37,7 +37,7 @@ The following is a list of the force fields being considered here:
 |OpenForceField       | 0.1.6     |
 |Schrodinger          | 2017-2  \*|
 
-\* We are working on updating this code to support the open source Desmond package provided by D.E. Shaw. This will allow for minimization with OPLS2005, whearas OPLS3 requires a license through Schrodinger. 
+\* We are working on updating this code to support the open source Desmond package provided by D.E. Shaw. This will allow for minimization with OPLS2005, whereas OPLS3 requires a license through Schrodinger. 
 
 ### Contents
 
