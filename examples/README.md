@@ -56,7 +56,8 @@ python OPLS.py --idir examples/tripos_mol2/ \
 python RMSD.py \
     --ref SMIRNOFF \
     --compare SMIRNOFF,GAFF,GAFF2,MMFF94,MMFF94S,OPLS2005,OPLS3 \
-    --directory examples/
+    --directory examples/ \
+    --cutoff 0.07
 ```
 
 * `RMSD.txt` - complete data table for RMSDs comparing each pair of forcefields for each molecule
