@@ -6,10 +6,9 @@
 # Victoria Lim (limvt@uci.edu)
 # Caitlin C. Bannan (bannanc@uci.edu)
 
-### Description: This Python script calculate the RMSD valuesbetween
-#     each force field. The rms values is output into a txt files as
-#     "name of molecule/referece force field/query force field/rms"
-### TODO:
+### Description: This Python script calculates the RMSD values between
+#     specified force fields. The values are output into a 'RMSD.txt'
+#     or some user-specified output file.
 
 import os
 import openeye.oechem as oechem
@@ -19,14 +18,17 @@ import openeye.oechem as oechem
 
 def RMSD(ref_mol2, query_mol2):
     """
-    From a set of reference molecules and query molecules, the RMSD values are
-    computed and wrote into a file.
+    From one input reference molecule and one input query molecule,
+    the RMSD is computed and returned.
 
     Parameters
     ---------
     ref_mol2: str - mol2 file of the reference force field
     query_mol2: str - mol2 file of the query force field
 
+    Returns
+    -------
+    rms: float - RMSD in Angstroms
 
     """
 
@@ -85,10 +87,16 @@ if __name__ == '__main__':
             dest = 'directory')
 
     parser.add_option('-o', '--output',
-            help = "OPTIONAL: Name of output file with results, it will be saved to the specified directory. If None provided RMSD.txt is used",
+            help = "OPTIONAL: Name of results output file. This will be saved to the directory with force fields. If no output file is specified, RMSD.txt is used.",
             type = 'string',
             dest = 'output',
             default = 'RMSD.txt')
+
+    parser.add_option('-v', '--cutoff',
+            help = 'OPTIONAL: Cutoff for what RMSD values are considered outliers. If 0.0 no outlier output is generated.',
+            type = 'float',
+            dest = 'cutoff',
+            default = 2.0)
 
     (opt, args) = parser.parse_args()
 
@@ -97,11 +105,15 @@ if __name__ == '__main__':
         parser.error("ERROR: No force field was specified.")
     if opt.compare == None:
         parser.error("ERROR: No force field was specified.")
+    if opt.cutoff < 0:
+        parser.error("ERROR: cutoff for outlier RMSDs must be greater than or equal to 0.0")
     if opt.directory == None:
-        print("no working directory provided using current directory")
+        print("No working directory provided. Using current directory.")
         directory = os.getcwd()
     else:
         directory = opt.directory
+    if not os.path.isdir(directory):
+        parser.error("ERROR: could not find directory %s" % directory)
 
 
     # set up an error file to record molecule does not exist
@@ -111,12 +123,17 @@ if __name__ == '__main__':
     # set up a log file for RMSD
     logFile = open('%s/%s' % (directory, opt.output) ,'a')
 
+    has_outlier = False
+    if opt.cutoff > 0.0:
+        has_outlier = True
+        outlier_logFile = open('%s/outlier_%s' % (directory, opt.output), 'a')
+
     # Split up reference and compare force fields
     refFFs = opt.ref.split(',')
 
     for ref in refFFs:
         logFile.write("# Reference Force Field: %s \n" % ref)
-        logFile.write("# Molecue Set Directory: %s \n" % directory)
+        logFile.write("# Molecule Set Directory: %s \n" % directory)
 
         # get the list of comparison force fields and remove reference
         listFFs = opt.compare.split(',')
@@ -124,7 +141,11 @@ if __name__ == '__main__':
 
         refMols = os.listdir(directory + '/' + ref + '/')
         ff_string = "\t".join(['%-9s' % f for f in listFFs])
-        logFile.write("%-20s\t%s\n" % ("# MolName", ff_string))
+        logFile.write("%-20s\t%s\n" % ("  MolName", ff_string))
+        if has_outlier:
+            outlier_logFile.write("# Reference Force Field: %s \n" % ref)
+            outlier_logFile.write("# Molecule Set Directory: %s \n" % directory)
+            outlier_logFile.write("%-20s\t%s\n" % ("  MolName", ff_string))
 
         # loop through each file in the directory and feed them into the funciton
         for mol2_file in refMols:
@@ -133,6 +154,7 @@ if __name__ == '__main__':
                 continue
             rms_list = list()
             molName = mol2_file.split('.')[0]
+            is_outlier = False
             for queryFF in listFFs:
                 ref_file = directory + '/' + ref + '/' + mol2_file
                 query_file = directory + '/' + queryFF + '/' + mol2_file
@@ -140,7 +162,7 @@ if __name__ == '__main__':
 
                 # different SMILE strings detected
                 if value == -1:
-                    oechem.OEThrow.Warning("Negative RMSD's value detected for %s-%s" % (molName, value) )
+                    oechem.OEThrow.Warning("Negative RMSD value detected for %s: %s" % (molName, value) )
                     nValue.write("%s\t%s\t%s\t%.3e\n" % (molName, ref, queryMol, value) )
                     rms_list.append("Neg\t")
                 # write mol2 file that does not exist into a file
@@ -150,12 +172,20 @@ if __name__ == '__main__':
                     rms_list.append("NaN\t")
                 else:
                     rms_list.append("%.3e" % value)
+                    if value >= opt.cutoff:
+                        is_outlier = True
 
             #for each query mol2 file that match reference mol2 file, write out the rms value to the list
             rms_string = "\t".join(rms_list)
             logFile.write("%-20s\t%s\n" % (molName,rms_string))
+            if is_outlier and has_outlier:
+                outlier_logFile.write('%-20s\t%s\n' % (molName, rms_string))
 
         logFile.write('#\n')
+        if has_outlier:
+            outlier_logFile.write('#\n')
     errFile.close()
     nValue.close()
     logFile.close()
+    if has_outlier:
+        outlier_logFile.close()

@@ -1,0 +1,4 @@
+# Reference Force Field: SMIRNOFF 
+# Molecule Set Directory: examples 
+  MolName           	GAFF     	GAFF2    	MMFF94   	MMFF94S  	OPLS2005 	OPLS3    
+#
