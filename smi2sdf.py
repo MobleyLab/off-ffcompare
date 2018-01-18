@@ -144,6 +144,6 @@ if __name__ == '__main__':
     if opt.smiles is None:
         parser.error("Must provide smiles file")
     if opt.sdf is None:
-        parser.error("Must provide a working directory")
+        parser.error("Must provide output SDF filename")
 
     smi2sdf(opt.sdf, opt.smiles)

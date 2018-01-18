@@ -83,7 +83,7 @@ def GenTriposGAFF(mol):
         os.system('antechamber -i %s/%s.mol2 -fi mol2 -o %s/%s.mol2 -fo mol2 -at gaff2'\
          % ('tripos_mol2', molName, 'gaff2_mol2', molName))
         os.system('parmchk2 -i %s/%s.mol2 -f mol2 -s gaff2 -o %s/%s.frcmod'\
-         % ('gaff_mol2', molName, 'gaff2_mol2', molName))
+         % ('gaff2_mol2', molName, 'gaff2_mol2', molName))
 
         # generates gaff2 inpcrd and prmtop files
         try:

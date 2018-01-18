@@ -17,24 +17,39 @@ Here we have created scripts to minimize small molecules using a variety of forc
 The following is a list of the force fields being considered here:
 
 * [SMIRNOFF99Frosst](https://github.com/open-forcefield-group/smirnoff99Frosst)
-* [GAFF](http://ambermd.org/antechamber/gaff.html)
-* [GAFF2](https://mulan.swmed.edu/group/gaff.php)
+* [GAFF (Version 1.8)](http://ambermd.org/antechamber/gaff.html)
+* [GAFF2(Version 2.1)](https://mulan.swmed.edu/group/gaff.php)
 * [MMFF94](http://open-babel.readthedocs.io/en/latest/Forcefields/mmff94.html)
 * [MMFF94S](http://open-babel.readthedocs.io/en/latest/Forcefields/mmff94.html)
 * [OPLS3](http://pubs.acs.org/doi/abs/10.1021/acs.jctc.5b00864)
 * [OPLS2005](http://dx.doi.org/10.1002/jcc.20292)
 
+### Python Dependencies 
+
+| Package             | Version   |
+| -------             | -------:  |
+|OpenEye              | 2016.10.1 |
+|OpenMolTools         | 0.7.5     |
+|AmberTools           | 2016      |
+|OpenMM               | 7.0.1     |
+|MDTRAJ               | 1.7.2     |
+|ParmEd               | 2.6.1     |
+|OpenForceField       | 0.1.6     |
+|Schrodinger          | 2017-2  \*|
+
+\* We are working on updating this code to support the open source Desmond package provided by D.E. Shaw. This will allow for minimization with OPLS2005, whereas OPLS3 requires a license through Schrodinger. 
+
 ### Contents
 
 * `min_oe_openMM.py`: Script to read in mol2 files and run minimization using OpenMM (or oechem.OESzybki).
 
-* *genTriposGAFFandGAFF2.py*: Script to generate mol2 files with Tripos, GAFF, and GAFF2 atom types.
+* `genTriposGAFFandGAFF2.py`: Script to generate mol2 files with Tripos, GAFF, and GAFF2 atom types.
 
-* *smirnoff99Frosst.ffxml*: FFXML file for SMIRNOFF
+* `smirnoff99Frosst.ffxml`: FFXML file for SMIRNOFF
 
-* *smi2sdf.py*: Script to generate a collection SDF file from a list of SMILES strings for use in genTriposGAFFandGAFF2.py
+* `smi2sdf.py`: Script to generate a collection SDF file from a list of SMILES strings for use in genTriposGAFFandGAFF2.py
 
-* *filter_molecules.py* : This script was used to filter the eMolecules and DrugBank databases to meet the requirements for this project.  
+* `filter_molecules.py` : This script was used to filter the eMolecules and DrugBank databases to meet the requirements for this project.  
 
 ___
 

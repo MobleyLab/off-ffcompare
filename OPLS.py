@@ -3,7 +3,6 @@
 ### Author:
 # Nam Thi
 # Caitlin C. Bannan (bannanc@uci.edu)
-# Daisy Y. Kyu
 # Victoria Lim (limvt@uci.edu)
 
 ### Description: This Python script minimizes mol2 files in the
@@ -33,12 +32,12 @@ import sys
 
 def OPLS3_minimize(in_mol2, out_mol2):
     """
-    Performs a minimization using OPLS3 on the input mol2 file
-    Assumes the input and output files have already been checked
+    Performs a minimization using OPLS3 on the input mol2 file.
+    Assumes the input and output files have already been checked.
 
     Parameters
     ----------
-    in_mols: string, input mol2 file location
+    in_mol2: string, input mol2 file location
     out_mol2: string, output mol2 file location
     """
     cmd = '$SCHRODINGER/utilities/ffld_server  -version 16 -charges_from_ct \
@@ -49,12 +48,12 @@ def OPLS3_minimize(in_mol2, out_mol2):
 
 def OPLS2005_minimize(in_mol2, out_mol2):
     """
-    Performs a minimization using OPLS2005 on the input mol2 file
-    Assumes the input and output files have already been checked
+    Performs a minimization using OPLS2005 on the input mol2 file.
+    Assumes the input and output files have already been checked.
 
     Parameters
     ----------
-    in_mols: string, input mol2 file location
+    in_mol2: string, input mol2 file location
     out_mol2: string, output mol2 file location
     """
     cmd = '$SCHRODINGER/utilities/ffld_server -version 14 -charges_from_ct \
@@ -126,7 +125,7 @@ if __name__ == '__main__':
         os.environ.get('SCHRODINGER')
     except:
         parser.print_help()
-        parser.error("ERROR: cannont find environment variable $SCHRODINGER please add it before continuing")
+        parser.error("ERROR: cannont find environment variable $SCHRODINGER. Please add it before continuing.")
 
     # Get Mol2 Files!
     mol2_files = glob.glob("%s/*.mol2" % opt.idir)
