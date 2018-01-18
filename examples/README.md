@@ -54,11 +54,11 @@ python OPLS.py --idir examples/tripos_mol2/ \
 
 ```
 python RMSD.py \
-    --ref SMIRNOFF,GAFF,GAFF2,MMFF94,MMFF94S,OPLS2005,OPLS3 \
+    --ref SMIRNOFF \
     --compare SMIRNOFF,GAFF,GAFF2,MMFF94,MMFF94S,OPLS2005,OPLS3 \
-    --directory examples/ 
+    --directory examples/
 ```
 
 * `RMSD.txt` - complete data table for RMSDs comparing each pair of forcefields for each molecule
 * `negavite_value.txt` - file that would enumerate molecules that did not match from different force field
-* `rmsd_errfile.txt` - file that would enumerate errors with opening minimized mol2 files if they existed 
+* `rmsd_errfile.txt` - file that would enumerate errors with opening minimized mol2 files if they existed
