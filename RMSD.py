@@ -25,7 +25,7 @@ def RMSD(ref_mol2, query_mol2):
     ---------
     ref_mol2: str - mol2 file of the reference force field
     query_mol2: str - mol2 file of the query force field
-    
+
     Returns
     -------
     rms: float - RMSD in Angstroms
@@ -92,6 +92,12 @@ if __name__ == '__main__':
             dest = 'output',
             default = 'RMSD.txt')
 
+    parser.add_option('-v', '--cutoff',
+            help = 'OPTIONAL: Cutoff for what RMSD values are considered outliers. If 0.0 no outlier output is generated.',
+            type = 'float',
+            dest = 'cutoff',
+            default = 0.0)
+
     (opt, args) = parser.parse_args()
 
     ### Check required fields.
@@ -99,11 +105,15 @@ if __name__ == '__main__':
         parser.error("ERROR: No force field was specified.")
     if opt.compare == None:
         parser.error("ERROR: No force field was specified.")
+    if opt.cutoff < 0:
+        parser.error("ERROR: cutoff for outlier RMSDs must be greater than or equal to 0.0")
     if opt.directory == None:
         print("No working directory provided. Using current directory.")
         directory = os.getcwd()
     else:
         directory = opt.directory
+    if not os.path.isdir(directory):
+        parser.error("ERROR: could not find directory %s" % directory)
 
 
     # set up an error file to record molecule does not exist
@@ -113,9 +123,13 @@ if __name__ == '__main__':
     # set up a log file for RMSD
     logFile = open('%s/%s' % (directory, opt.output) ,'a')
 
+    outlier_logFile = None
+    if opt.cutoff > 0.0:
+        outlier_logFile = open('%s/outlier_%s' % (directory, opt.output), 'a')
+
     # Split up reference and compare force fields
     refFFs = opt.ref.split(',')
-    
+
     for ref in refFFs:
         logFile.write("# Reference Force Field: %s \n" % ref)
         logFile.write("# Molecule Set Directory: %s \n" % directory)
@@ -126,7 +140,11 @@ if __name__ == '__main__':
 
         refMols = os.listdir(directory + '/' + ref + '/')
         ff_string = "\t".join(['%-9s' % f for f in listFFs])
-        logFile.write("%-20s\t%s\n" % ("# MolName", ff_string))
+        logFile.write("%-20s\t%s\n" % ("  MolName", ff_string))
+        if outlier_logFile is not None:
+            outlier_logFile.write("# Reference Force Field: %s \n" % ref)
+            outlier_logFile.write("# Molecule Set Directory: %s \n" % directory)
+            outlier_logFile.write("%-20s\t%s\n" % ("  MolName", ff_string))
 
         # loop through each file in the directory and feed them into the function
         for mol2_file in refMols:
@@ -135,6 +153,7 @@ if __name__ == '__main__':
                 continue
             rms_list = list()
             molName = mol2_file.split('.')[0]
+            is_outlier = False
             for queryFF in listFFs:
                 ref_file = directory + '/' + ref + '/' + mol2_file
                 query_file = directory + '/' + queryFF + '/' + mol2_file
@@ -148,16 +167,24 @@ if __name__ == '__main__':
                 # write mol2 file that does not exist into a file
                 elif value == -2:
                     oechem.OEThrow.Warning("Unable to locate %s. Skipping." % query_file)
-                    errFile.write("This queryMol does not exist: %s\n" % query_file )
+                    errFile.write("This query molecule does not exist: %s\n" % query_file )
                     rms_list.append("NaN\t")
                 else:
                     rms_list.append("%.3e" % value)
+                    if value >= opt.cutoff:
+                        is_outlier = True
 
             #for each query mol2 file that match reference mol2 file, write out the rms value to the list
             rms_string = "\t".join(rms_list)
             logFile.write("%-20s\t%s\n" % (molName,rms_string))
+            if (outlier_logFile is not None) and is_outlier:
+                outlier_logFile.write('%-20s\t%s\n' % (molName, rms_string))
 
         logFile.write('#\n')
+        if outlier_logFile is not None:
+            outlier_logFile.write('#\n')
     errFile.close()
     nValue.close()
     logFile.close()
+    if outlier_logFile is not None:
+        outlier_logFile.close()
