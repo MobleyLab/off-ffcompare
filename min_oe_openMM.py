@@ -320,7 +320,7 @@ def minimizeOpenMM(Topology, System, Positions):
 # --------------------------- Main Function ------------------------- #
 
 def load_and_minimize(infiles, log, output_dir,
-        dommff = False, ffxml = None, gaff = None, gaff2 = None):
+        dommff = False, ffxml = None, gaff = None, gaff2 = None, opls=None):
     """
 
     This function finds all mol2 file in the input directory,
@@ -336,6 +336,7 @@ def load_and_minimize(infiles, log, output_dir,
     ffxml: String - path and name of *.ffxml file for SMIRNOFF minimization
     gaff: String - path to directory containing GAFF Inpcrd and Prmtop files
     gaff2: String - path to directory containing GAFF2 Inpcrd and Prmtop files
+    opls: String - path to directory containing OPLS parameterized Top files
 
     """
     molfiles = glob.glob(os.path.join(infiles, '*.mol2'))
@@ -423,6 +424,15 @@ def load_and_minimize(infiles, log, output_dir,
                     % mol.GetTitle())
             optGAFFx(mol, gaff2, fulln, log)
 
+        if opls is not None:
+            ### Set output file name and make a copy of the molecule of opt.
+            if not os.path.exists(os.path.join(output_dir, 'OPLS2005')):
+                os.makedirs(os.path.join(output_dir,'OPLS2005'))
+
+            fulln = os.path.join(output_dir+'/'+'OPLS2005',fname)
+            print('Starting on OPLS2005 optimization for %s\n'\
+                    % mol.GetTitle())
+            optOPLS(mol, opls, fulln, log)
 
 # ------------------------- Parse Inputs ----------------------- #
 
@@ -439,8 +449,8 @@ if __name__ == '__main__':
     usage:
     python min_oe_openMM.py --inmols mol2Directory \
         [--ffxml SMIRNOFF.ffxml] --gaffdir gaffDirectory \
-        --gaff2dir gaff2Directory --dommff True --log output.dat \
-        --outdir outputDirectory]
+        --gaff2dir gaff2Directory --dommff True --oplsdir Directory \
+        --log output.dat --outdir outputDirectory]
     """
 
     parser = OptionParser(usage = usage_string)
@@ -474,6 +484,13 @@ SMIRNOFF minimization is only performed when this is specified.",
             type = "string",
             default = None,
             dest = 'gaff2dir')
+
+    parser.add_option('-O', '--oplsdir',
+            help = "OPTIONAL! Directory containing OPLS parameter/topology \
+ files (*.top). OPLS minimization only performed if this directory is specified.",
+            type = "string",
+            default = None,
+            dest = 'oplsdir')
 
     parser.add_option('-f', '--dommff',
             help = "OPTIONAL! If True, minimizations will be performed \
@@ -509,9 +526,10 @@ in the output directory. Default is output.dat.",
     dommff = opt.dommff == 'True'
 
     ### Check that at least one force field input was provided
-    if (opt.gaffdir is None) and (opt.gaff2dir is None) and (opt.ffxml is None) and (not dommff):
+    if (opt.gaffdir is None) and (opt.gaff2dir is None) and (opt.ffxml is None) and (not dommff) and (opt.oplsdir is None):
         parser.error("ERROR: You must specify information for at least \
-one force field with the option --gaff, --gaff2, --dommff, --ffxml")
+one force field with the option --gaffdir, --gaff2dir, --oplsdir \
+, --dommff, --ffxml")
 
     ### Check for output directory
     if opt.outdir is None:
@@ -531,6 +549,8 @@ one force field with the option --gaff, --gaff2, --dommff, --ffxml")
         parser.error("ERROR: GAFF directory %s does not exist" % opt.gaff2dir)
     if (opt.ffxml is not None) and (not os.path.isfile(opt.ffxml)):
         parser.error("ERROR: FFXML file %s does not exist" % opt.ffxml)
+    if opt.oplsdir is not None) and (not os.path.isdir(opt.oplsdir)):
+        parser.error("ERROR: OPLS directory %s does not exist" % opt.oplsdir)
 
-    load_and_minimize(opt.inmols, log, outdir, dommff, opt.ffxml, opt.gaffdir, opt.gaff2dir)
+    load_and_minimize(opt.inmols, log, outdir, dommff, opt.ffxml, opt.gaffdir, opt.gaff2dir, opt.oplsdir)
     log.close()
