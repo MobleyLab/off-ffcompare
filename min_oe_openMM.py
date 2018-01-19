@@ -52,6 +52,7 @@ from parmed import unit as u
 
 import simtk.openmm as mm
 from simtk.openmm import app
+from simtk.openmm import Vec3
 
 from openforcefield.typing.engines.smirnoff import forcefield
 from openforcefield.typing.engines.smirnoff import forcefield_utils as ff_utils
@@ -175,6 +176,50 @@ def optSMIRNOFF(input_Mol, FF_file, output_mol2, log ):
     Mol.SetCoords(oechem.OEFloatArray(min_pos))
 
     return writeUpdatedMol(Mol, output_mol2, log)
+
+
+def optOPLS(mol, oplsdir, output_mol2, log):
+    """
+    This function follows optGAFFx in min_oe_openMM,
+    but for the GROMACS .top file from opls_input.sh
+
+    Parameters
+    ----------
+    mol: OEMol
+    oplsdir: directory with OPLS input files, expects a mol.GetTitle().top file
+    output_mol2: string, path/to/mols where output structure should be saved
+    log: open file to write log data
+
+    Returns
+    -------
+    boolean: True if minimization succeeded, False otherwise
+
+    """
+    ### Check for optimized file
+    if os.path.exists(output_mol2):
+        log.write('Optimization file %s already exists\n' % (output_mol2))
+        return False
+
+    top_file = os.path.join(oplsdir,mol.GetTitle()+'.top')
+
+    if not os.path.exists(top_file):
+        log.write('%s does not exist, skipping minimization\n' % prmFile)
+        return False
+    # TODO: determine if we need to check file size:
+    # elif not os.path.getsize(top_file) > 40:
+
+    tmpmol = oechem.OEMol(mol)
+    parm = parmed.load_file(top_file)
+    # get coordinates from molecule since GROMACS top doesn't have them
+    dic = mol.GetCoords()
+    parm.positions = [Vec3(v[0], v[1], v[2]) for k, v in dic.items()] * u.angstrom
+
+    System = parm.createSystem(nonbondedMethod=app.NoCutoff)
+
+    minimized_positions = minimizedOpenMM(parm.topology, System, parm.positions)
+    tmpmol.SetCoords(oechem.OEFloatArray(minimized_posititons))
+
+    return writeUpdatedMol(tmpmol, output_mol2, log)
 
 
 def optGAFFx(mol, gaffdir, output_mol2, log):
