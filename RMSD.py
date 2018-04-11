@@ -168,7 +168,7 @@ if __name__ == '__main__':
                 elif value == -2:
                     oechem.OEThrow.Warning("Unable to locate %s. Skipping." % query_file)
                     errFile.write("This query molecule does not exist: %s\n" % query_file )
-                    rms_list.append("NaN\t")
+                    rms_list.append("NaN")
                 else:
                     rms_list.append("%.3e" % value)
                     if value >= opt.cutoff:
