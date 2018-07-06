@@ -96,7 +96,11 @@ if __name__ == '__main__':
             help = 'OPTIONAL: Cutoff for what RMSD values are considered outliers. If 0.0 no outlier output is generated.',
             type = 'float',
             dest = 'cutoff',
+<<<<<<< HEAD
             default = 2.0)
+=======
+            default = 0.0)
+>>>>>>> 4382d04d81f2df34a1189573d863873d899f07c2
 
     (opt, args) = parser.parse_args()
 
@@ -123,9 +127,14 @@ if __name__ == '__main__':
     # set up a log file for RMSD
     logFile = open('%s/%s' % (directory, opt.output) ,'a')
 
+<<<<<<< HEAD
     has_outlier = False
     if opt.cutoff > 0.0:
         has_outlier = True
+=======
+    outlier_logFile = None
+    if opt.cutoff > 0.0:
+>>>>>>> 4382d04d81f2df34a1189573d863873d899f07c2
         outlier_logFile = open('%s/outlier_%s' % (directory, opt.output), 'a')
 
     # Split up reference and compare force fields
@@ -137,17 +146,21 @@ if __name__ == '__main__':
 
         # get the list of comparison force fields and remove reference
         listFFs = opt.compare.split(',')
-        listFFs.remove(ref)
+        #listFFs.remove(ref)
 
         refMols = os.listdir(directory + '/' + ref + '/')
         ff_string = "\t".join(['%-9s' % f for f in listFFs])
         logFile.write("%-20s\t%s\n" % ("  MolName", ff_string))
+<<<<<<< HEAD
         if has_outlier:
+=======
+        if outlier_logFile is not None:
+>>>>>>> 4382d04d81f2df34a1189573d863873d899f07c2
             outlier_logFile.write("# Reference Force Field: %s \n" % ref)
             outlier_logFile.write("# Molecule Set Directory: %s \n" % directory)
             outlier_logFile.write("%-20s\t%s\n" % ("  MolName", ff_string))
 
-        # loop through each file in the directory and feed them into the funciton
+        # loop through each file in the directory and feed them into the function
         for mol2_file in refMols:
             # skip non-mol2 files
             if mol2_file.split('.')[-1] != 'mol2':
@@ -163,13 +176,13 @@ if __name__ == '__main__':
                 # different SMILE strings detected
                 if value == -1:
                     oechem.OEThrow.Warning("Negative RMSD value detected for %s: %s" % (molName, value) )
-                    nValue.write("%s\t%s\t%s\t%.3e\n" % (molName, ref, queryMol, value) )
-                    rms_list.append("Neg\t")
+                    nValue.write("%s\t%s\t%s\t%.3e\n" % (molName, ref, query_file, value) )
+                    rms_list.append("Neg")
                 # write mol2 file that does not exist into a file
                 elif value == -2:
                     oechem.OEThrow.Warning("Unable to locate %s. Skipping." % query_file)
-                    errFile.write("This queryMol does not exist: %s\n" % query_file )
-                    rms_list.append("NaN\t")
+                    errFile.write("This query molecule does not exist: %s\n" % query_file )
+                    rms_list.append("NaN")
                 else:
                     rms_list.append("%.3e" % value)
                     if value >= opt.cutoff:
@@ -178,14 +191,26 @@ if __name__ == '__main__':
             #for each query mol2 file that match reference mol2 file, write out the rms value to the list
             rms_string = "\t".join(rms_list)
             logFile.write("%-20s\t%s\n" % (molName,rms_string))
+<<<<<<< HEAD
             if is_outlier and has_outlier:
                 outlier_logFile.write('%-20s\t%s\n' % (molName, rms_string))
 
         logFile.write('#\n')
         if has_outlier:
+=======
+            if (outlier_logFile is not None) and is_outlier:
+                outlier_logFile.write('%-20s\t%s\n' % (molName, rms_string))
+
+        logFile.write('#\n')
+        if outlier_logFile is not None:
+>>>>>>> 4382d04d81f2df34a1189573d863873d899f07c2
             outlier_logFile.write('#\n')
     errFile.close()
     nValue.close()
     logFile.close()
+<<<<<<< HEAD
     if has_outlier:
+=======
+    if outlier_logFile is not None:
+>>>>>>> 4382d04d81f2df34a1189573d863873d899f07c2
         outlier_logFile.close()

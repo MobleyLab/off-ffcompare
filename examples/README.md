@@ -1,24 +1,24 @@
 # Examples
 
 Here we show an example of how to use the provided scripts
-on a set of 8 Alkanes, Ethers, and Alcohols (AlkEthOH\_chain\_tiny).
+on a set of 2 molecules.
 
 Below is a list of command line calls that were used
 and a list of output files/directories for each.
 
-* `AlkEthOH_chain_tiny.smi` - smiles strings for this molecules
+* `example_molecules.smi` - smiles strings for this molecules
 
 ### SMILES to SDF
 ```
-python smi2sdf.py --smiles examples/AlkEthOH_chain_tiny.smi \
---sdf examples/AlkEthOH_chain_tiny.sdf
+python smi2sdf.py --smiles examples/example_molecules.smi \
+--sdf examples/example_molecules.sdf
 ```
 
-* `AlkEthOH_chain_tiny.sdf` - SDF file with all molecules in input smiles file
+* `example_molecules.sdf` - SDF file with all molecules in input smiles file
 
 ### Generating input files
 ```
-python genMOL2.py -i examples/AlkEthOH_chain_tiny.sdf -l examples/
+python genMOL2.py -i examples/example_molecules.sdf -l examples/
 ```
 
 * `tripos\_mol2/` - directory of Tripos mol2 files
@@ -56,7 +56,8 @@ python OPLS.py --idir examples/tripos_mol2/ \
 python RMSD.py \
     --ref SMIRNOFF \
     --compare SMIRNOFF,GAFF,GAFF2,MMFF94,MMFF94S,OPLS2005,OPLS3 \
-    --directory examples/
+    --directory examples/ \
+    --cutoff 0.07
 ```
 
 * `RMSD.txt` - complete data table for RMSDs comparing each pair of forcefields for each molecule

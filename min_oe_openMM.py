@@ -207,7 +207,7 @@ def optGAFFx(mol, gaffdir, output_mol2, log):
     if not os.path.exists(prmFile):
         log.write("%s does not exist, skipping minimization\n" % prmFile)
         return False
-    elif not os.path.getsize(prmFile) > 0:
+    elif not os.path.getsize(prmFile) > 40:
         log.write("%s is empty, skipping minimization\n" % prmFile)
         return False
 
@@ -215,7 +215,7 @@ def optGAFFx(mol, gaffdir, output_mol2, log):
     if not os.path.exists(inpFile):
         log.write("%s does not exist, skipping minimization\n" % inpFile)
         return False
-    elif not os.path.getsize(inpFile):
+    elif not os.path.getsize(inpFile) > 40:
         log.write("%s is empty, skipping minimization\n" % inpFile)
         return False
 
