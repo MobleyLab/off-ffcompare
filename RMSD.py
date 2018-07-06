@@ -163,12 +163,12 @@ if __name__ == '__main__':
                 if value == -1:
                     oechem.OEThrow.Warning("Negative RMSD value detected for %s: %s" % (molName, value) )
                     nValue.write("%s\t%s\t%s\t%.3e\n" % (molName, ref, query_file, value) )
-                    rms_list.append("Neg\t")
+                    rms_list.append("Neg")
                 # write mol2 file that does not exist into a file
                 elif value == -2:
                     oechem.OEThrow.Warning("Unable to locate %s. Skipping." % query_file)
                     errFile.write("This query molecule does not exist: %s\n" % query_file )
-                    rms_list.append("NaN\t")
+                    rms_list.append("NaN")
                 else:
                     rms_list.append("%.3e" % value)
                     if value >= opt.cutoff:
