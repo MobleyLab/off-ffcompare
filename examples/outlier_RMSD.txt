@@ -1,4 +1,5 @@
-# Reference Force Field: SMIRNOFF
-# Molecule Set Directory: examples/
-  MolName           	SMIRNOFF 	GAFF     	GAFF2    	MMFF94   	MMFF94S  	OPLS2005 	OPLS3
+# Reference Force Field: SMIRNOFF 
+# Molecule Set Directory: examples/ 
+  MolName           	SMIRNOFF 	GAFF     	GAFF2    	MMFF94   	MMFF94S  	OPLS2005 	OPLS3    
 AlkEthOH_c42        	0.000e+00	2.525e-02	4.161e-02	2.616e-02	2.616e-02	8.488e-02	2.902e-02
+#
