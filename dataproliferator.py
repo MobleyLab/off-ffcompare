@@ -1,12 +1,3 @@
-<<<<<<< HEAD
-=======
-
-# coding: utf-8
-
-# In[1]:
-
-
->>>>>>> d46fa0678973c22ff2e2d4155e82beff69ea24ef
 # importing
 import pandas as pd
 import numpy as np
@@ -14,7 +5,6 @@ import collections
 from itertools import combinations
 
 
-<<<<<<< HEAD
 def read_in(directory,heavyatom):
     """
     This function reads in the alldata.csv. It expects the format of the 
@@ -24,17 +14,6 @@ def read_in(directory,heavyatom):
     # reading in csv
     alldatadf = pd.read_csv("%s/alldata.csv" % directory, index_col = 0)
     # removing errors, which were coded as -1 by dataextractor.py
-=======
-# In[2]:
-
-
-# this function reads in the alldata.csv. It expects the 
-# format of the alldata.csv produced by the differencemeasure.py
-# make heavyatomcount user-input
-def read_in(directory,heavyatom):
-    alldatadf = pd.read_csv("%s/alldata.csv" % directory, index_col = 0)
-    #removing errors
->>>>>>> d46fa0678973c22ff2e2d4155e82beff69ea24ef
     for column in alldatadf:
         if alldatadf[column].dtype == float:
             alldatadf = alldatadf[alldatadf[column] >= 0]
@@ -43,7 +22,6 @@ def read_in(directory,heavyatom):
     return alldatadf
 
 
-<<<<<<< HEAD
 def print_stat(directory,alldataframe,heavyatom):
     """
     This prints a human-readable statistical summary of each column
@@ -56,23 +34,10 @@ def print_stat(directory,alldataframe,heavyatom):
         tempstat = alldataframe[column].describe(percentiles = [.25,.5,.75,.95])
         statdict[column] = tempstat
     #exporting statistics(heavyatomcount).txt
-=======
-# In[1]:
-
-
-# prints a human-readable statistical summary of each column of data
-# make title dependent on heavyatomcount user input
-def print_stat(directory,alldataframe,heavyatom):
-    statdict = {}
-    for column in alldataframe:
-        tempstat = alldataframe[column].describe(percentiles = [.25,.5,.75,.95])
-        statdict[column] = tempstat
->>>>>>> d46fa0678973c22ff2e2d4155e82beff69ea24ef
     with open('%s/statistics%d.txt' % (directory, heavyatom),'w') as data:
         data.write(str(statdict))
 
 
-<<<<<<< HEAD
 def get_ff_combos(alldataframe):
     """This function finds all combinations of forcefields using only the
     titles of the columns of the imported csv file. 
@@ -80,15 +45,6 @@ def get_ff_combos(alldataframe):
     fflistlist = []
     space = " "
     #generating combinations of force fields
-=======
-# In[4]:
-
-
-# creates all combinations of force fields for use in flagging
-def get_ff_combos(alldataframe):
-    fflistlist = []
-    space = " "
->>>>>>> d46fa0678973c22ff2e2d4155e82beff69ea24ef
     for columns in alldataframe:
         fflist = columns.split(' ')[-2:]
         if len(fflist) == 2:
@@ -96,23 +52,13 @@ def get_ff_combos(alldataframe):
         else:
             fflist = fflist[0]
         fflistlist.append(fflist)
-<<<<<<< HEAD
     #removing objects that are not forcefields from ffs
     fflist_but_not_ffs = ['MolNames','HeavyAtomCount']
     #and removing repeats
-=======
-    fflist_but_not_ffs = ['MolNames','HeavyAtomCount']
->>>>>>> d46fa0678973c22ff2e2d4155e82beff69ea24ef
     ffs = set(fflistlist) - set(fflist_but_not_ffs)
     return ffs
 
 
-<<<<<<< HEAD
-=======
-# In[2]:
-
-
->>>>>>> d46fa0678973c22ff2e2d4155e82beff69ea24ef
 # parses through user inputs
 if __name__ == '__main__':
     from optparse import OptionParser
@@ -198,7 +144,6 @@ if __name__ == '__main__':
     flagsetdf.to_csv('%s/flagset%d.csv' % (directory,heavyatomlimit))
     flagsetlitedf = flagsetdf.select_dtypes(include=['O','int'])
     flagsetlitedf.to_csv('%s/flagsetlite%d.csv' % (directory,heavyatomlimit))
-<<<<<<< HEAD
     
     #finds conformers that are different and exports dataframes of them 
     ffindivlist = list()
@@ -229,6 +174,4 @@ if __name__ == '__main__':
         indivdict[forcef] = forcedifdf
     for difforce in indivdict:
         indivdict[difforce].to_csv('%s/indivdif%s%d.csv' % (directory,difforce,heavyatomlimit))
-=======
->>>>>>> d46fa0678973c22ff2e2d4155e82beff69ea24ef
 

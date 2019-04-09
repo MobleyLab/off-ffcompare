@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 #Importing
-=======
-#importing
->>>>>>> d46fa0678973c22ff2e2d4155e82beff69ea24ef
 from rdkit import Chem, RDConfig, Geometry
 from rdkit.Chem import AllChem, TorsionFingerprints
 import os, sys
@@ -13,7 +9,6 @@ import numpy as np
 import itertools
 
 
-<<<<<<< HEAD
 def tanimotocombo(ref_mol, query_mol):
     """This is the TanimotoCombo function. It takes in two OEMols. 
     It does not matter (for our purposes) which mol is the reference mol and 
@@ -21,16 +16,6 @@ def tanimotocombo(ref_mol, query_mol):
     mols is the same no matter which is the reference and which is the query.
     The GetTanimotoCombo() function comes from openeye. 
     """
-=======
-# In[2]:
-
-
-# This is the tanimotocombo script. It takes in two OEMOLs.
-# It does not matter which mol is the reference mol and which one is the query mol. 
-# The TanimotoCombo distance between the two mols is the same no matter the order. 
-#tanimotocombo function comes from openeye.
-def tanimotocombo(ref_mol, query_mol):
->>>>>>> d46fa0678973c22ff2e2d4155e82beff69ea24ef
     # Prepare reference molecule for calculation
     # With default options this will remove any explicit
     # hydrogens present and add color atoms
@@ -47,7 +32,6 @@ def tanimotocombo(ref_mol, query_mol):
     return("%s" % res.GetTanimotoCombo())
 
 
-<<<<<<< HEAD
 def TFDr(ref_mol, query_mol):
     """
     This is the TFDr script. 
@@ -55,23 +39,10 @@ def TFDr(ref_mol, query_mol):
     TFDr takes in two OEMOLs. 
     It does not matter which mol is the ref mol and which is the querymol. 
     TFD metric is the same no matter which is the ref and which is the query.
-=======
-# In[3]:
-
-
-#This is the TFDr script. 
-#It makes use of RDKit's TFD calculation and the function rdmol_from_oemol, defined below
-#TFDr takes in two OEMOLs
-#It does not matter which mol is the ref mol and which is the querymol
-#TFD distance is the same no matter the order
-def TFDr(ref_mol, query_mol):
-    """
->>>>>>> d46fa0678973c22ff2e2d4155e82beff69ea24ef
     First, OEmols are made RDKit compatible. Then,
     TFD is computed and returned using RDKit's TorsionFingerprints
     Module. Takes one input reference mol2 and one input query mol2.
     """
-<<<<<<< HEAD
     #converts refmol to one readable by RDKit
     rrdmol2 = rdmol_from_oemol(ref_mol)
     #converts querymol to one readable by RDKit
@@ -81,35 +52,15 @@ def TFDr(ref_mol, query_mol):
         tfd = -1
     else:
         #calculates the TFD
-=======
-    #actually convert
-    rrdmol2 = rdmol_from_oemol(ref_mol)
-    #actually convert
-    qrdmol2 = rdmol_from_oemol(query_mol)
-    if (Chem.MolToSmiles(qrdmol2) != Chem.MolToSmiles(rrdmol2)):
-        tfd = -1
-    else:
-        #get TFD
->>>>>>> d46fa0678973c22ff2e2d4155e82beff69ea24ef
         tfd = TorsionFingerprints.GetTFDBetweenMolecules(rrdmol2, qrdmol2)
     return tfd
 
 
-<<<<<<< HEAD
 
 def rdmol_from_oemol(oemol):
     """
     Converts one oemol to a format recognizable by RDKit. 
     Written by Caitlin Bannan.
-=======
-# In[4]:
-
-
-#This turns oemol into rdmol-compatible ones, for use with RDKit's TFD script. 
-def rdmol_from_oemol(oemol):
-    """
-    Creates an openeye molecule object that is identical to the input rdkit molecule
->>>>>>> d46fa0678973c22ff2e2d4155e82beff69ea24ef
     """
     print("Starting molecule")
 
@@ -227,7 +178,6 @@ def rdmol_from_oemol(oemol):
     return rdmol.GetMol()
 
 
-<<<<<<< HEAD
 def make_molname_df(directory,ffdirectorylist):
     """This is the make_molname_df function. It finds the names of mol2 files
     that are present in all forcefield-minimized directories in the directory.
@@ -236,17 +186,6 @@ def make_molname_df(directory,ffdirectorylist):
     dname = {}
     # for every forcefield, create dataframe of molnames
     for ffdirect in ffdirectorylist:
-=======
-# In[5]:
-
-
-# This finds the molnames that are present in all three forcefield-minimized directories
-# In the future, I'll change the first line to make it able to take in different force fields. 
-def make_molname_df(directory,ffdirectorylist):
-    allnamedf = pd.DataFrame(columns=['allMolName'])
-    dname = {}
-    for ffdirect in ffdirectorylist :
->>>>>>> d46fa0678973c22ff2e2d4155e82beff69ea24ef
         tempdirectory = '%s/%s/' % (directory, ffdirect)
         list_of_mol2 = sorted(os.listdir(tempdirectory))
         list_of_molnames = list()
@@ -255,11 +194,8 @@ def make_molname_df(directory,ffdirectorylist):
             list_of_molnames.append(molName)
         tempnamedf = pd.DataFrame(np.array(list_of_molnames))
         dname["%s" % ffdirect] = tempnamedf
-<<<<<<< HEAD
     # merges all dataframes generated above into one dataframe
     # only keeps molecules present in all dataframes
-=======
->>>>>>> d46fa0678973c22ff2e2d4155e82beff69ea24ef
     twonamedf = dname[ffdirectorylist[0]].merge(dname[ffdirectorylist[1]])
     for i in range(2, len(ffdirectorylist)):
         threenamedf = dname[ffdirectorylist[i]].merge(twonamedf)
@@ -267,7 +203,6 @@ def make_molname_df(directory,ffdirectorylist):
     return threenamedf
 
 
-<<<<<<< HEAD
 def all_info_df(ffdirectorylist,threenamedf):
     """
     This is the all_info_df function. It takes in the list of forcefields,
@@ -284,40 +219,20 @@ def all_info_df(ffdirectorylist,threenamedf):
         TFDdict['%s %s' % (i, j)] = {}
         TANIdict['%s %s' % (i, j)] = {}
     #generates all the data
-=======
-# In[6]:
-
-
-#This makes dictionaries of TFD and TANI values for each combination of forcefields 
-def all_info_df(ffdirectorylist,threenamedf):
-    heavyatomlist = list()
-    TFDdict = {}
-    TANIdict = {}
-    for i,j in list(itertools.combinations(ffdirectorylist,2)):
-        TFDdict['%s %s' % (i, j)] = {}
-        TANIdict['%s %s' % (i, j)] = {}
-
->>>>>>> d46fa0678973c22ff2e2d4155e82beff69ea24ef
     for molname in threenamedf['MolNames']:
         print(molname)
         mol_file = '%s' % molname + '.mol2'
         refmolin = oechem.oemolistream('%s/%s/%s' % (directory,ffdirectorylist[0],mol_file))
         refmolhev = oechem.OEGraphMol()
         oechem.OEReadMolecule(refmolin,refmolhev)
-<<<<<<< HEAD
         #tries to get heavyatom count -- if it can't, returns -1. 
-=======
->>>>>>> d46fa0678973c22ff2e2d4155e82beff69ea24ef
         try:
             heavyvalue = oechem.OECount(refmolhev, oechem.OEIsHeavy())
         except (Exception, ValueError):
             heavyvalue = -1
         heavyatomlist.append(heavyvalue)
         refmolin.close()
-<<<<<<< HEAD
         #Gets TanimotoCombo and TFD values
-=======
->>>>>>> d46fa0678973c22ff2e2d4155e82beff69ea24ef
         for i,j in list(itertools.combinations(ffdirectorylist,2)):
             refmolin = oechem.oemolistream('%s/%s/%s' % (directory,i, mol_file))
             refmol = oechem.OEGraphMol()
@@ -325,19 +240,13 @@ def all_info_df(ffdirectorylist,threenamedf):
             qmolin = oechem.oemolistream('%s/%s/%s' % (directory,j, mol_file))
             qmol = oechem.OEGraphMol()
             oechem.OEReadMolecule(qmolin,qmol)
-<<<<<<< HEAD
             #Tries to set TFD value. If it cannot, sets as -1. 
-=======
->>>>>>> d46fa0678973c22ff2e2d4155e82beff69ea24ef
             try:
                 TFDvalue = TFDr(refmol,qmol)
             except (Exception, ValueError):
                 TFDvalue = -1
             TFDdict['%s %s' % (i, j)]['%s' % molname]=TFDvalue
-<<<<<<< HEAD
             #Tries to set TanimotoCombo value. If it cannot, sets as -1. 
-=======
->>>>>>> d46fa0678973c22ff2e2d4155e82beff69ea24ef
             try:
                 TANIvalue = tanimotocombo(refmol,qmol)
             except (Exception, ValueError):
@@ -345,10 +254,7 @@ def all_info_df(ffdirectorylist,threenamedf):
             TANIdict['%s %s' % (i, j)]['%s' % molname]=TANIvalue
             qmolin.close()
             refmolin.close()
-<<<<<<< HEAD
     #Loads data into dataframe
-=======
->>>>>>> d46fa0678973c22ff2e2d4155e82beff69ea24ef
     for key in TFDdict:
         tempdf = pd.DataFrame.from_dict(TFDdict['%s' % key],'index')
         tempdf = tempdf.rename({0:'TFD %s' % key}, axis = 'columns')
@@ -364,14 +270,7 @@ def all_info_df(ffdirectorylist,threenamedf):
     threenamedf['HeavyAtomCount'] = tempdf['HeavyAtomCount']
     return threenamedf
 
-<<<<<<< HEAD
 #Performs above functions.
-=======
-
-# In[8]:
-
-
->>>>>>> d46fa0678973c22ff2e2d4155e82beff69ea24ef
 if __name__ == '__main__':
     from optparse import OptionParser
 
@@ -396,9 +295,6 @@ if __name__ == '__main__':
     directory = opt.directory
     molnamedf = make_molname_df(directory,fflist)
     endmoldf = all_info_df(fflist,molnamedf)
-<<<<<<< HEAD
     #Exports all data as csv 
-=======
->>>>>>> d46fa0678973c22ff2e2d4155e82beff69ea24ef
     endmoldf.to_csv('%s/alldata.csv' % directory)
 
