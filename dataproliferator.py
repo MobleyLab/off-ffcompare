@@ -1,4 +1,20 @@
-# importing
+# This is the dataproliferator script. It takes the alldata.csv produced by
+# the dataextractor script and generates useful data from it. User inputs 
+# include:
+# --tfddc, the TFD difference cutoff after which the script will consider 
+# conformers different
+# --tfdsc, the TFD similarity cutoff before which the script will consider
+# conformers the same 
+# --tanisc, the TanimotoCombo similarity cutoff before which the script 
+# will consider molecules similar in atom coordinates (and thus eligible
+# for flagging) 
+# --heavy, the max number of heavy atoms eligible for analysis 
+# --directory, the directory that includes the alldata.csv file and where
+# new csv's will be written. 
+# Written by Jordan Ehrman, from MobleyLab, UCI. 
+# Last updated April 16, 2019. 
+
+# Importing
 import pandas as pd
 import numpy as np
 import collections
@@ -10,14 +26,21 @@ def read_in(directory,heavyatom):
     This function reads in the alldata.csv. It expects the format of the 
     alldata.csv produced by the dataextractor.py script. It uses the user-
     specified directory and heavy atom count as inputs. 
+
+    Args: 
+        directory (str) path that contains csv file 
+        heavyatom (int) max number of heavy atoms to consider for analysis
+
+    Returns: 
+        alldatadf (dataframe) dataframe of molecules to consider for analysis
     """
-    # reading in csv
+    # Reading in csv
     alldatadf = pd.read_csv("%s/alldata.csv" % directory, index_col = 0)
-    # removing errors, which were coded as -1 by dataextractor.py
+    # Removing errors, which were coded as -1 by dataextractor.py
     for column in alldatadf:
         if alldatadf[column].dtype == float:
             alldatadf = alldatadf[alldatadf[column] >= 0]
-    # removing molecules above some max HeavyAtomCount
+    # Removing molecules above some max HeavyAtomCount
     alldatadf = alldatadf[alldatadf["HeavyAtomCount"] <= heavyatom]
     return alldatadf
 
@@ -26,25 +49,41 @@ def print_stat(directory,alldataframe,heavyatom):
     """
     This prints a human-readable statistical summary of each column
     of data. Title of output is dependent on heavyatomcount. 
+
+    Args: 
+        directory (str) path to write output to 
+        alldataframe (dataframe) dataframe output from read_in function
+        heavyatom (int) max heavy atom count for analysis
+
+    Returns: 
+        statistics(heavyatom).txt Human readable text file describing 
+        statistics of each column of alldataframe. 
     """
-    # creating empty dictionary to populate later
+    # Creating empty dictionary to populate later
     statdict = {}
-    # finding the percentiles that correspond to each column of dataframe
+    # Finding the percentiles that correspond to each column of dataframe
     for column in alldataframe:
-        tempstat = alldataframe[column].describe(percentiles = [.25,.5,.75,.95])
+        tempstat = alldataframe[column].describe(percentiles\
+        = [.25,.5,.75,.95])
         statdict[column] = tempstat
-    #exporting statistics(heavyatomcount).txt
+    # Exporting statistics(heavyatomcount).txt
     with open('%s/statistics%d.txt' % (directory, heavyatom),'w') as data:
         data.write(str(statdict))
 
 
 def get_ff_combos(alldataframe):
     """This function finds all combinations of forcefields using only the
-    titles of the columns of the imported csv file. 
+    titles of the columns of the imported csv file.
+
+    Args: 
+        alldataframe (dataframe) dataframe produced by read_in function. 
+
+    Returns: 
+        ffs (set) set of all combinations of force fields 
     """
     fflistlist = []
     space = " "
-    #generating combinations of force fields
+    # Generating combinations of force fields
     for columns in alldataframe:
         fflist = columns.split(' ')[-2:]
         if len(fflist) == 2:
@@ -52,14 +91,14 @@ def get_ff_combos(alldataframe):
         else:
             fflist = fflist[0]
         fflistlist.append(fflist)
-    #removing objects that are not forcefields from ffs
+    # Removing objects that are not forcefields from ffs
     fflist_but_not_ffs = ['MolNames','HeavyAtomCount']
-    #and removing repeats
+    # And removing repeats
     ffs = set(fflistlist) - set(fflist_but_not_ffs)
     return ffs
 
 
-# parses through user inputs
+# Parses through user inputs
 if __name__ == '__main__':
     from optparse import OptionParser
 
@@ -105,25 +144,27 @@ if __name__ == '__main__':
     tfdsamecutoff = opt.tfdsc
     heavyatomlimit = opt.heavylim
     
-    #runs above functions
+    # Runs above functions
     alldatadf = read_in(directory,heavyatomlimit)
     print_stat(directory,alldatadf,heavyatomlimit)
     ffs = get_ff_combos(alldatadf)
     
-    #flags molecules as similar or different
-    #different molecules are defined different by TFD, same by TaniCo
-    #same molecules defined as similar by TFD
+    # Flags molecules as similar or different
+    # Different molecules are defined different by TFD, same by TaniCo
+    # Same molecules defined as similar by TFD
     flaggerdicts = {}
     antiflaggerdicts = {}
     for ffcombo in ffs:
-        tempflagdatadf = alldatadf[(alldatadf['TFD %s' % ffcombo] > tfddifcutoff) & (alldatadf['TANI %s' % ffcombo] > tanisamecutoff)]
+        tempflagdatadf = alldatadf[(alldatadf['TFD %s' % ffcombo]\
+        > tfddifcutoff) & (alldatadf['TANI %s' % ffcombo] > tanisamecutoff)]
         flaggerdicts[ffcombo] = tempflagdatadf
-        tempantiflagdatadf = alldatadf[(alldatadf['TFD %s' % ffcombo] < tfdsamecutoff)]
+        tempantiflagdatadf = alldatadf[(alldatadf['TFD %s' % ffcombo]\
+        < tfdsamecutoff)]
         antiflaggerdicts[ffcombo] = tempantiflagdatadf
         
-    #counts same flags and difference flags for each flagged molecule
-    #'extend' appends list-like column to list
-    #'Counter' counts frequency of object in list 
+    # Counts same flags and difference flags for each flagged molecule
+    # 'Extend' appends list-like column to list
+    # 'Counter' counts frequency of object in list 
     flagcountmolname = []
     for i in flaggerdicts:
         flagcountmolname.extend((flaggerdicts[i]["MolNames"]))
@@ -133,7 +174,7 @@ if __name__ == '__main__':
         antiflagcountmolname.extend((antiflaggerdicts[i]["MolNames"]))
     anticounter = collections.Counter(antiflagcountmolname)
     
-    #organizes and exports csvs of data
+    # Organizes and exports csvs of data
     antiflagsetdf = pd.DataFrame({'same_flag freq':anticounter})
     flagsetdf = pd.DataFrame({'dif_flag freq':counter})
     antiflagsetdf["MolNames"] = antiflagsetdf.index
@@ -145,7 +186,7 @@ if __name__ == '__main__':
     flagsetlitedf = flagsetdf.select_dtypes(include=['O','int'])
     flagsetlitedf.to_csv('%s/flagsetlite%d.csv' % (directory,heavyatomlimit))
     
-    #finds conformers that are different and exports dataframes of them 
+    # Finds conformers that are different and exports dataframes of them 
     ffindivlist = list()
     indivdict = {}
     for ff in ffs:
@@ -168,10 +209,13 @@ if __name__ == '__main__':
                 else: 
                     continue
             columndict[columntitle] = firstdf
-        forcedifdf = columndict[list(columndict.keys())[0]].merge(columndict[list(columndict.keys())[1]])
+        forcedifdf = columndict[list(columndict.keys())[0]].merge\
+        (columndict[list(columndict.keys())[1]])
         for i in range(1,len(list(columndict.keys()))):
-            forcedifdf = forcedifdf.merge(columndict[list(columndict.keys())[i]])
+            forcedifdf = forcedifdf.merge(columndict[list(columndict.keys())\
+            [i]])
         indivdict[forcef] = forcedifdf
     for difforce in indivdict:
-        indivdict[difforce].to_csv('%s/indivdif%s%d.csv' % (directory,difforce,heavyatomlimit))
+        indivdict[difforce].to_csv('%s/indivdif%s%d.csv'\
+        % (directory,difforce,heavyatomlimit))
 
