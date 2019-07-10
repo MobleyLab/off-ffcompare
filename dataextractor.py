@@ -54,7 +54,9 @@ def tanimotocombo(ref_mol, query_mol):
 
 def TFD_for_oemols(ref_mol, query_mol):
     """
-    This is the TFD_for_oemols script. 
+    This is the TFD_for_oemols script.
+    TFD is the Torsion Fingerprint Deviation. 
+    TFD was defined by Schulz-Gash et al. in 2012.  
     It makes use of RDKit's TFD calculation and the function rdmol_from_oemol.
     TFD_for_oemols takes in two OEMOLs. 
     It does not matter which mol is the ref mol and which is the querymol. 
