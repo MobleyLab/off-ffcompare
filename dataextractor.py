@@ -16,10 +16,12 @@ import os, sys
 import pandas as pd
 import numpy as np
 import itertools
-import oeneye.oechem as oechem
+import openeye.oechem as oechem
 from openeye import oeshape
 from rdkit import Chem, RDConfig, Geometry
 from rdkit.Chem import AllChem, TorsionFingerprints
+import warnings
+warnings.filterwarnings("error")
 
 def tanimotocombo(ref_mol, query_mol):
     """
@@ -54,9 +56,7 @@ def tanimotocombo(ref_mol, query_mol):
 
 def TFD_for_oemols(ref_mol, query_mol):
     """
-    This is the TFD_for_oemols script.
-    TFD is the Torsion Fingerprint Deviation. 
-    TFD was defined by Schulz-Gash et al. in 2012.  
+    This is the TFD_for_oemols script. 
     It makes use of RDKit's TFD calculation and the function rdmol_from_oemol.
     TFD_for_oemols takes in two OEMOLs. 
     It does not matter which mol is the ref mol and which is the querymol. 
@@ -81,7 +81,10 @@ def TFD_for_oemols(ref_mol, query_mol):
         tfd = -1
     else:
         # calculates the TFD
-        tfd = TorsionFingerprints.GetTFDBetweenMolecules(rrdmol2, qrdmol2)
+        try: 
+            tfd = TorsionFingerprints.GetTFDBetweenMolecules(rrdmol2, qrdmol2)
+        except IndexError: 
+            tfd = 0
     return tfd
 
 
@@ -230,21 +233,26 @@ def make_molname_df(directory,ffdirectorylist):
     dname = {}
     # for every forcefield, create dataframe of molnames
     for ffdirect in ffdirectorylist:
+        print('parsing' + ffdirect)
         tempdirectory = '%s/%s/' % (directory, ffdirect)
+        print('loading molnames into list')
         list_of_mol2 = sorted(os.listdir(tempdirectory))
+        print('creating empty list to load reformatted molnames into')
         list_of_molnames = list()
+        print('reformatting')
         for mol2 in list_of_mol2:
             molName = mol2.split('.')[0]
             list_of_molnames.append(molName)
-        tempnamedf = pd.DataFrame(np.array(list_of_molnames))
+        print('loading into dataframe')
+        tempnamedf = pd.DataFrame({'MolNames': list_of_molnames})
+        print('storing dataframe as dictionary')
         dname["%s" % ffdirect] = tempnamedf
     # merges all dataframes generated above into one dataframe
     # only keeps molecules present in all dataframes
     twonamedf = dname[ffdirectorylist[0]].merge(dname[ffdirectorylist[1]])
     for i in range(2, len(ffdirectorylist)):
-        all_ff_df = dname[ffdirectorylist[i]].merge(twonamedf)
-    all_ff_df = all_ff_df.rename({0: "MolNames"},axis='columns')
-    return all_ff_df
+        twonamedf = dname[ffdirectorylist[i]].merge(twonamedf)
+    return twonamedf
 
 
 def all_info_df(ffdirectorylist, all_ff_df):
@@ -262,7 +270,7 @@ def all_info_df(ffdirectorylist, all_ff_df):
     """
     # Creating empty dictionaries that TFD and TANI scores will go in later,
     # As well as a heavyatomlist for putting heavy atoms in
-    heavyatomlist = list()
+    heavyatomdict = {}
     TFDdict = {}
     TANIdict = {}
     # Creates combinations of forcefields and puts them into dictionaries
@@ -273,26 +281,34 @@ def all_info_df(ffdirectorylist, all_ff_df):
     for molname in all_ff_df['MolNames']:
         print(molname)
         mol_file = '%s' % molname + '.mol2'
-        refmolin = oechem.oemolistream('%s/%s/%s' % (directory,ffdirectorylist[0],mol_file))
-        refmolhev = oechem.OEGraphMol()
-        oechem.OEReadMolecule(refmolin,refmolhev)
-        heavyvalue = oechem.OECount(refmolhev, oechem.OEIsHeavy())
-        heavyatomlist.append(heavyvalue)
-        refmolin.close()
-        # Gets TanimotoCombo and TFD values
-        for i,j in list(itertools.combinations(ffdirectorylist,2)):
-            refmolin = oechem.oemolistream('%s/%s/%s' % (directory,i, mol_file))
-            refmol = oechem.OEGraphMol()
-            oechem.OEReadMolecule(refmolin,refmol)
-            qmolin = oechem.oemolistream('%s/%s/%s' % (directory,j, mol_file))
-            qmol = oechem.OEGraphMol()
-            oechem.OEReadMolecule(qmolin,qmol)
-            # Getting TFD
-            TFDvalue = TFD_for_oemols(refmol,qmol)
-            TFDdict['%s %s' % (i, j)]['%s' % molname]=TFDvalue
-            # Getting TanimotoCombo
-            TANIvalue = tanimotocombo(refmol,qmol)
-            TANIdict['%s %s' % (i, j)][molname]=TANIvalue
+        try:    
+            refmolin = oechem.oemolistream('%s/%s/%s' % (directory,ffdirectorylist[0],mol_file))
+            refmolhev = oechem.OEGraphMol()
+            oechem.OEReadMolecule(refmolin,refmolhev)
+            heavyvalue = oechem.OECount(refmolhev, oechem.OEIsHeavy())
+            heavyatomdict[molname] = heavyvalue
+            refmolin.close()
+            # Gets TanimotoCombo and TFD values
+            for i,j in list(itertools.combinations(ffdirectorylist,2)):
+                refmolin = oechem.oemolistream('%s/%s/%s' % (directory,i, mol_file))
+                refmol = oechem.OEGraphMol()
+                oechem.OEReadMolecule(refmolin,refmol)
+                qmolin = oechem.oemolistream('%s/%s/%s' % (directory,j, mol_file))
+                qmol = oechem.OEGraphMol()
+                oechem.OEReadMolecule(qmolin,qmol)
+                # Getting TFD
+                TFDvalue = TFD_for_oemols(refmol,qmol)
+                TFDdict['%s %s' % (i, j)]['%s' % molname]=TFDvalue
+                # Getting TanimotoCombo
+                TANIvalue = tanimotocombo(refmol,qmol)
+                TANIdict['%s %s' % (i, j)][molname]=TANIvalue
+                qmolin.close()
+                refmolin.close()
+        except: 
+            heavyatomdict[molname] = -1
+            for i,j in list(itertools.combinations(ffdirectorylist,2)):
+                TANIdict['%s %s' % (i, j)][molname]=-1
+                TFDdict['%s %s' % (i, j)][molname]=-1
             qmolin.close()
             refmolin.close()
     # Loads data into dataframe
@@ -306,9 +322,10 @@ def all_info_df(ffdirectorylist, all_ff_df):
         tempdf = tempdf.rename({0:'TANI %s' % key}, axis = 'columns')
         tempdf['MolNames'] = tempdf.index
         all_ff_df = all_ff_df.merge(tempdf, on='MolNames')
-    tempdf = pd.DataFrame(np.array(heavyatomlist))
+    tempdf = pd.DataFrame.from_dict(heavyatomdict, orient="index")
     tempdf = tempdf.rename({0:'HeavyAtomCount'}, axis = 'columns')
-    all_ff_df['HeavyAtomCount'] = tempdf['HeavyAtomCount']
+    tempdf['MolNames'] = tempdf.index
+    all_ff_df = all_ff_df.merge(tempdf, on='MolNames')
     return all_ff_df
 
 # Performs above functions.
@@ -331,9 +348,11 @@ if __name__ == '__main__':
     if opt.directory == None: 
         parser.error("ERROR: No working directory provided.")
     
-
+    print('grabbing fflist')
     fflist = opt.ff.split(',')
+    print('grabbed fflist')
     directory = opt.directory
+    print('grabbed directory')
     molnamedf = make_molname_df(directory,fflist)
     endmoldf = all_info_df(fflist,molnamedf)
     #Exports all data as csv 
