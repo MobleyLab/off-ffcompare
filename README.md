@@ -82,5 +82,5 @@ ______
    * OPLS3: `python OPLS.py --input /path/to/triposmol2Files --optimizetype "OPLS3" --outdir /path/output_directory/`
    * OPLS2005: `python OPLS.py --input /path/to/triposmol2Files --optimizetype "OPLS2005" --outdir /path/output_directory/`
 
-4. Evaluate RMSD.
-   * `python --ref [name of reference force-field] --compare [names of compared force fields] --directory /path/containing/directories`
+4. Evaluate RMSD. Torsion Fingerprint Deviation and TanimotoCombo can also be found using the same input format, but with TFD_TANI.py instead of RMSD.py. 
+   * `python RMSD.py --ref [name of reference force-field] --compare [names of compared force fields] --directory /path/containing/directories`
